@@ -1,4 +1,4 @@
-n, m = map(int, input())
+n, m = map(int, input().split())
 
 def sol(n, m):
     min_num = n*m+10
