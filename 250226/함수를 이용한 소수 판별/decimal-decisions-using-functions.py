@@ -15,4 +15,4 @@ def sol(A, B):
             res += 1
 
     return res
-print(sol(A, B))
+print(sol(a, b))
