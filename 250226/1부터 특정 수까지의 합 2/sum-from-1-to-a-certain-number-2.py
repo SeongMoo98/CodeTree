@@ -3,10 +3,13 @@ N = int(input())
 res = 0
 # Please write your code here.
 def sol(depth):
+    global res
     if depth == N+1:
         return 
-    sol(depth+1, res+depth)
+    res += depth
+    sol(depth+1)
 
 
 
-print(sol(1), res)
+sol(1)
+print(res)
