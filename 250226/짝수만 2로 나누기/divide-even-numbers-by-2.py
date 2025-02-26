@@ -1,10 +1,10 @@
 N = int(input())
-arr = list(map(int, input()))
+arr = list(map(int, input().split()))
 
 def sol(arr, N):
     for i in range(N):
         if arr[i] % 2 == 0:
-            arr[i] /= 2
+            arr[i] //= 2
 
     return arr
 
