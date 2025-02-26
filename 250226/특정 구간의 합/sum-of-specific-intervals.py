@@ -8,4 +8,6 @@ def sol(N, M, queries):
     global arr
 
     for i in range(M):
-        print(sum(arr[queries[i][0]-1:queries[i][1]-1]))
+        print(sum(arr[queries[i][0]-1:queries[i][1]-1+1]))
+
+sol(n, m, queries)
