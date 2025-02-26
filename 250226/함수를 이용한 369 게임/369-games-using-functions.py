@@ -12,4 +12,6 @@ def sol(A, B):
                 count += 1
                 break
 
+    return count
+
 print(sol(A, B))
