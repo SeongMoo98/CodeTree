@@ -6,7 +6,7 @@ def sol(y):
             return False
         else:
             return True
-    return True
+    return False
 
 if sol(y):
     print("true")
