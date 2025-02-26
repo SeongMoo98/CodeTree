@@ -4,5 +4,5 @@ n, m = map(int, input().split())
 
 def sol(n, m):
     return m, n
-
-print(sol(n, m))
+n, m = sol(n, m)
+print(n, m)
