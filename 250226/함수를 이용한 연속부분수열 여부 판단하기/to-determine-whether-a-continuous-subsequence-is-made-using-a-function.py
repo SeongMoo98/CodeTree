@@ -11,7 +11,10 @@ b = list(map(int, input().split()))
 # a에서 뽑아야하는 연속 수열 n2개
 
 res = False
-for i in range(n1-n2):
+for i in range(n1):
+    if i + n2 > n1:
+        break
+    
     if b == a[i:i+n2]:
         res = True
         break
