@@ -5,3 +5,5 @@ arr = list(map(int, input().split()))
 def sol(arr, n):
     for i in range(n):
         print(abs(arr[i]), end=' ')
+
+sol(arr, n)
