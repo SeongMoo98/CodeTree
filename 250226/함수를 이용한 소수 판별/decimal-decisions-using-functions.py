@@ -12,7 +12,7 @@ def sol(A, B):
 
     for num in range(A, B+1):
         if is_prime(num):
-            res += nunm
+            res += num
 
     return res
 print(sol(a, b))
