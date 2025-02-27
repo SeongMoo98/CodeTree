@@ -9,6 +9,10 @@ for i in range(n):
     prev = grid[i][0]
     count = 1
     for j in range(1, n):     
+        if count >= m:
+            res += 1
+            break
+            
         if prev == grid[i][j]:
             count += 1
         else:
@@ -24,6 +28,10 @@ for j in range(n):
     prev = grid[0][j]
     count = 1
     for i in range(1, n):
+        if count >= m:
+            res += 1
+            break
+
         if prev == grid[i][j]:
             count += 1
         else:
