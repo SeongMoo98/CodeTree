@@ -38,6 +38,7 @@ class doubly_linked_list:
     def pop_front(self):
         if self.head == None:
             return 
+        # Node가 하나일때를 생각안함
         if self.size == 1:
             print(self.head.data)
             self.head = None
@@ -54,7 +55,7 @@ class doubly_linked_list:
     def pop_back(self):
         if self.head == None:
             return 
-        
+        # Node가 하나일때를 생각안함
         if self.size == 1:
             print(self.tail.data)
             self.head = None
