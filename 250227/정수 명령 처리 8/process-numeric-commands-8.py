@@ -43,6 +43,7 @@ class doubly_linked_list:
             self.head = None
             self.tail = None
             self.size -= 1
+            return 
         ret_value = self.head.data
         self.head = self.head.next
         self.prev = None
@@ -55,10 +56,11 @@ class doubly_linked_list:
             return 
         
         if self.size == 1:
-            print(self.head.data)
+            print(self.tail.data)
             self.head = None
             self.tail = None
             self.size -= 1
+            return 
         ret_value = self.tail.data
         self.tail = self.tail.prev
         self.tail.next = None
