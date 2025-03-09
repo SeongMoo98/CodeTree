@@ -10,15 +10,15 @@ y = [p[1] for p in points]
 
 min_dist = float('inf')
 
-
 for skip_idx in range(1, n-1):
     ci, cj = 0, 0
     dist = 0    
     for j in range(1, n):
-        ni, nj = x[j], y[j]
         if j == skip_idx:
             ci, cj = x[skip_idx-1], y[skip_idx-1]
             continue
+        ni, nj = x[j], y[j]
+
         dist += abs(ni - ci) + abs(nj - cj)
         ci, cj = ni, nj
         
