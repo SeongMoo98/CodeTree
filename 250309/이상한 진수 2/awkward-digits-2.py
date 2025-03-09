@@ -4,10 +4,14 @@ a = input()
 
 a = list(a)
 
-for i in range(len(a)):
-    if a[i] == '0':
-        a[i] = '1'
-        break
+# 전부 1일 때
+if a.count('0') == 0:
+    a[0] = '0'
+else:
+    for i in range(len(a)):
+        if a[i] == '0':
+            a[i] = '1'
+            break
 
 num = 0
 for i in range(len(a)):
