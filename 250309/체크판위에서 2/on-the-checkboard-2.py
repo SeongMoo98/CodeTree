@@ -11,8 +11,8 @@ grid = [list(input().split()) for _ in range(R)]
 
 start = grid[0][0]
 count = 0
-for i in range(1, R):
-    for j in range(1, C):
+for i in range(1, R-2):
+    for j in range(1, C-2):
         if start != grid[i][j]:
             curr = grid[i][j]
             for l in range(i+1, R-1):
