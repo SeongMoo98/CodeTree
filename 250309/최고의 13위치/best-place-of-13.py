@@ -5,8 +5,7 @@ grid = [list(map(int, input().split())) for _ in range(n)]
 count = 0 
 for i in range(n):
     count = max(count, grid[i][0:3].count(1))
-    print(count)
-    for j in range(n-3):
+    for j in range(n-2):
         count = max(count, grid[i][j:j+3].count(1))
 
 print(count)
