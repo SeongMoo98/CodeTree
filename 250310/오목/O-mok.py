@@ -39,10 +39,14 @@ def check_win(color, ci, cj):
     if 5 in steps:
         return True
 
-
+flag = False
 for i in range(19):
     for j in range(19):
         if board[i][j] == 1 or board[i][j] == 2:
             if check_win(board[i][j], i, j):
+                flag = True
                 print(board[i][j])
                 print(i+1, j+1)
+
+if flag == False:
+    print(0)
