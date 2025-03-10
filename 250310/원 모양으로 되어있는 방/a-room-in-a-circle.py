@@ -1,27 +1,17 @@
 n = int(input())
-points = [tuple(map(int, input().split())) for _ in range(n)]
-x = [p[0] for p in points]
-y = [p[1] for p in points]
+a = [int(input()) for _ in range(n)]
 
 # Please write your code here.
-# 1번 체크포인트 -> N번 체크포인트
-# 1, N번 체크포인트 제외 체크포인트 건너뛰기
-# 최소 거리(맨하탄)
-
+# 모든 사람이 같은 방에서 시작(시계 반대방향으로 이동)
+# 어떤 방에서 시작해야 각 방에 정해진 인원이 들어가는 데까지의
+# 거리의 합이 최소화하는가
+a.extend(a)
 min_dist = float('inf')
+for start_room in range(n):
+    move_dist = 0
+    for i in range(n):
+        visit_room = (start_room + i)
+        move_dist += abs(visit_room - start_room) * a[visit_room]
+    min_dist = min(min_dist, move_dist)
 
-for skip_idx in range(1, n-1):
-    ci, cj = x[0], y[0]
-    dist = 0    
-    for j in range(1, n):
-        if j == skip_idx:
-            ci, cj = x[skip_idx-1], y[skip_idx-1]
-            continue
-        ni, nj = x[j], y[j]
-
-        dist += abs(ni - ci) + abs(nj - cj)
-        ci, cj = ni, nj
-        
-    min_dist = min(min_dist, dist)
 print(min_dist)
-
