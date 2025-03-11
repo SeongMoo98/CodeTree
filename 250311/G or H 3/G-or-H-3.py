@@ -13,15 +13,16 @@ for _ in range(n):
 # 사진의 크기가 K
 
 # 위치는 1 ~ x
-positions = [0] * (max(x) + 1) 
+MAX_X = 10000
+positions = [0] * (MAX_X + 1) 
 
 for pos, ch in zip(x, c):
     positions[pos] = ch
 
 max_score = 0
-for i in range(1, max(x)-k+2):
+for i in range(1, MAX_X-k+1):
     score = 0
-    temp = positions[i:i+k]
+    temp = positions[i:i+k+1]
     score += temp.count("G")
     score += 2 * temp.count("H")
     
