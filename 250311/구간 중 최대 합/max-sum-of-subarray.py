@@ -5,6 +5,6 @@ arr = list(map(int, input().split()))
 max_sum = 0
 if n == k:
     print(sum(arr))
-for i in range(n-k):
+for i in range(n-k+1):
     max_sum = max(max_sum, sum(arr[i:i+k]))
 print(max_sum)
