@@ -9,9 +9,9 @@ count = 0
 for i in range(1, N+1):
     for j in range(1, N+1):
         for k in range(1, N+1):
-            if (abs(combination[0] - i) < 2) or \
-            (abs(combination[1] - j) < 2)\
-             or (abs(combination[2] - k) < 2):
+            if (abs(combination[0] - i) <= 2) or \
+            (abs(combination[1] - j) <= 2)\
+             or (abs(combination[2] - k) <= 2):
              count += 1
 print(count)
 
