@@ -18,9 +18,9 @@ def dfs(curr):
     global count
     for next_node in graph[curr]:
         if next_node not in visited:
-            visited.append(curr)
+            visited.append(next_node)
             count += 1
-            dfs(next)
+            dfs(next_node)
 
 dfs(1)
 print(count)
