@@ -16,13 +16,14 @@ visited = [(0, 0)]
 
 res = 0
 def dfs(ci, cj):
-    global d, N, M, res
+    global d, N, M, res, visited
     if (ci, cj) == (N-1, M-1):
         res = 1
         return 
 
     for di, dj in d:
         ni, nj = ci + di, cj + dj
+        # 범위 안, 미 방문, 뱀 X
         if 0 <= ni < N and 0 <= nj < N and (ni, nj) not in visited\
             and graph[ni][nj] != 0:
             visited.append((ni, nj))
