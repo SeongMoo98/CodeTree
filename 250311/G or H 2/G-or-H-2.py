@@ -25,9 +25,10 @@ def find_ans():
         for i in range(len(positions) - sub_len + 1):
             sub_pos = positions[i:i+sub_len]
             if sub_pos[0] != 0 and sub_pos[-1] != 0:
-                if (sub_pos.count("G") == sub_pos.count("H")) or \
-                    (len(sub_pos) == sub_pos.count("G")) or \
-                    (len(sub_pos) == sub_pos.count("H")):
+                count_G, count_H = sub_pos.count("G"), sub_pos.count("H")
+                if (count_G == count_H) or \
+                    (count_G != 0 and count_H == 0) or \
+                    (count_G == 0 and count_H != 0):
                     return sub_len - 1
 
 print(find_ans())
