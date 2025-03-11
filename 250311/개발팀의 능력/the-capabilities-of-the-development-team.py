@@ -5,18 +5,22 @@
 
 N = 5
 scores = list(map(int, input().split()))
-res = -1
+MAX_VAL = 5001
+res = MAX_VAL
 for i in range(N-1):
     for j in range(i+1, N):
         team1 = scores[i] + scores[j]
         for k in range(N-1):
             for m in range(k+1, N):
                 team2 = scores[k] + scores[m]
-                tema3 = sum(scores) - team1 - team2
+                team3 = sum(scores) - team1 - team2
                 if i != k and i != m and j != k and j != m and \
                     team1 != team2 and team2 != team3:
-                    res = min(res, max(team1, team2, tema3) - min(team1, team2, tema3))
+                    res = min(res, max(team1, team2, team3) - min(team1, team2, team3))
+if res == MAX_VAL:
+    print(-1)
+else:
+    print(res)
 
-print(res)
                 
 
