@@ -4,14 +4,20 @@
 scores = list(map(int, input().split()))
 
 total_sum = sum(scores)
+
 min_sub = float('inf')
+res = 0
 for i in range(4):
     for j in range(1, 5):
         for k in range(2, 6):
-            temp_sum = scores[i] + scores[j] + scores[k]
-            min_sub = min(min_sub, abs((total_sum - temp_sum) - temp_sum))
+            team1 = scores[i] + scores[j] + scores[k]
+            team2 = total_sum - team1
+            if abs(team1 - team2) < min_sub:
+                min_sub = abs(team1 - team2)
+                res = abs(team1 - team2)
+            
 
-print(min_sub)    
+print(res)    
 
 
         
