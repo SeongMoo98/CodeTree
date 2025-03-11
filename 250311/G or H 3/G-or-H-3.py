@@ -17,11 +17,11 @@ positions = [0] * (max_x + 1)
 
 for num, pos in zip(list(range(1, n+1)), x):
     positions[pos] = num
-    
+
 max_score = 0
-for i in range(max_x-k+1+1):
+for i in range(max_x-k+1):
     score = 0
-    for j in range(i, i+k):
+    for j in range(i, i+k+1):
         if positions[j] != 0:
             if c[positions[j]-1] == "G":
                 score += 1
