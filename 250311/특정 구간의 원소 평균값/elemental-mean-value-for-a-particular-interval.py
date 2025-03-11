@@ -8,7 +8,7 @@ arr = list(map(int, input().split()))
 # 1개, 2개 .. N개의 원소를 선택
 count = 0
 for inter in range(1, N+1):
-    for j in range(N):
+    for j in range(N-inter+1):
         # inter개 선택
         temp = arr[j: j+inter]
         if sum(temp) / inter in temp:
