@@ -19,9 +19,9 @@ for pos, ch in zip(x, c):
     positions[pos] = ch
 
 max_score = 0
-for i in range(1, max(x)-k+1):
+for i in range(1, max(x)-k+2):
     score = 0
-    temp = positions[i:i+k+1]
+    temp = positions[i:i+k]
     score += temp.count("G")
     score += 2 * temp.count("H")
     
