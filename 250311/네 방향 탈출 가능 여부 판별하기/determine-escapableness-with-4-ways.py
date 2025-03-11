@@ -18,7 +18,7 @@ while q:
     ci, cj = q.popleft()
     for di, dj in d:
         ni, nj = ci + di, cj + dj
-        if 0 <= ni < N and 0 <= nj < M and (ni, nj) not in visited and graph[ni][nj] == 1:
+        if 0 <= ni < N and 0 <= nj < M and visited[ni][nj] == 0 and graph[ni][nj] == 1:
             visited[ni][nj] = 1
             q.append((ni, nj))
 
