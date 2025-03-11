@@ -24,7 +24,7 @@ def dfs(ci, cj):
     for di, dj in d:
         ni, nj = ci + di, cj + dj
         # 범위 안, 미 방문, 뱀 X
-        if 0 <= ni < N and 0 <= nj < N and (ni, nj) not in visited\
+        if 0 <= ni < N and 0 <= nj < M and (ni, nj) not in visited\
             and graph[ni][nj] != 0:
             visited.append((ni, nj))
             dfs(ni, nj)
