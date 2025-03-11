@@ -1,21 +1,22 @@
-# 6명을 2명씩 3팀으로 배정
+# 개발자 5명의 알고리즘 능력이 정수로 주어짐
+# 2명, 2명, 1명이 팀
+# 최대 능력의 팀과 최소 능력의 팀과의 차이가 최소가 되도록
+# 단, 모든 팀의 능력치 합이 서로 다르게 팀을 묶어야함
 
-# 팀원들의 능력 총합이 가장 큰 팀과 가장 작은 팀의 차이를 최소화할 때
-# 최대팀과 최소 팀간의 차를 출력
-n = 6
+N = 5
 scores = list(map(int, input().split()))
-total_sum = sum(scores)
+res = -1
+for i in range(N-1):
+    for j in range(i+1, N):
+        team1 = scores[i] + scores[j]
+        for k in range(N-1):
+            for m in range(k+1, N):
+                team2 = scores[k] + scores[m]
+                tema3 = sum(scores) - team1 - team2
+                if i != k and i != m and j != k and j != m and \
+                    team1 != team2 and team2 != team3:
+                    res = min(res, max(team1, team2, tema3) - min(team1, team2, tema3))
 
-min_sub = float("inf")
-for i in range(n):
-    for j in range(i+1, n):
-        # 얘는 왜 0부터 시작인가?
-        # (i, j)가 (0,2)일 때 (l, m)은 (1, 3)이 가능하기 때문이다
-        for l in range(n):
-            for m in range(l+1, n):
-                if l != i and l != j and m != i and m != j:
-                    team1 = scores[i] + scores[j]
-                    team2 = scores[l] + scores[m]
-                    team3 = total_sum - team1 - team2
-                    min_sub = min(min_sub, max(team1, team2, team3) - min(team1, team2, team3))
-print(min_sub)
+print(res)
+                
+
