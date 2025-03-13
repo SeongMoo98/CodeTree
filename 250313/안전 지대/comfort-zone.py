@@ -18,33 +18,42 @@ MAX_K = max([max(li) for li in matrix])
 d = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
 
-# (안전 영역의 수, k)
-safety = []
+def sol(N, M, matrix, MAX_K, d):
+    # (안전 영역의 수, k)
+    safety = []
 
-def dfs(curr, k):
-    ci, cj = curr[0], curr[1]
-    
-    for di, dj in d:
-        ni, nj = ci + di, cj + dj
-        if 0 <= ni < N and 0 <= nj < M and (ni, nj) not in visited and matrix[ni][nj] > k:
-            visited.append((ni, nj))
-            dfs((ni, nj), k)
-
-
-# 최대 높이 -1 만큼 가능
-for k in range(1, MAX_K):
-    count = 0
-    visited = []
-    for i in range(N):
-        for j in range(M):
-            if (i, j) not in visited and matrix[i][j] > k:
-                visited.append((i, j))
-                dfs((i, j), k)
-                count += 1
-    if count != 0:
-        safety.append((count, k))
+    def dfs(curr, k):
+        ci, cj = curr[0], curr[1]
+        
+        for di, dj in d:
+            ni, nj = ci + di, cj + dj
+            if 0 <= ni < N and 0 <= nj < M and (ni, nj) not in visited and matrix[ni][nj] > k:
+                visited.append((ni, nj))
+                dfs((ni, nj), k)
 
 
-safety.sort(key = lambda x:(-x[0], x[1]))
+    # 최대 높이 -1 만큼 가능
+    for k in range(1, MAX_K):
+        count = 0
+        visited = []
+        for i in range(N):
+            for j in range(M):
+                if (i, j) not in visited and matrix[i][j] > k:
+                    visited.append((i, j))
+                    dfs((i, j), k)
+                    count += 1
+        if count != 0:
+            safety.append((count, k))
 
-print(safety[0][0], safety[0][1])    
+
+    safety.sort(key = lambda x:(-x[0], x[1]))
+
+    return safety[0][1], safety[0][0]
+
+# ***** MAX_K가 1이면 runtime error가 난다..!  *****
+if MAX_K == 1:
+    print(0, 1)
+else:
+    k, c = sol(N, M, matrix, MAX_K, d)
+    print(k ,c)
+
