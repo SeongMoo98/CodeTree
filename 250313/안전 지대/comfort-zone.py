@@ -1,5 +1,5 @@
 import sys
-sys.setrecursionlimit(10000)
+sys.setrecursionlimit(100000)
 # N x M 격자
 # 각 집의 높이는 1이상 100이하의 정수
 
