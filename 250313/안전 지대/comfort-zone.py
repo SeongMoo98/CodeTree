@@ -46,13 +46,15 @@ def sol(N, M, matrix, MAX_K, d):
             safety.append((count, k))
 
 
+    # 안전영역 수 큰 순, k 작은 순
     safety.sort(key = lambda x:(-x[0], x[1]))
 
     return safety[0][1], safety[0][0]
 
 # ***** MAX_K가 1이면 runtime error가 난다..!  *****
 if MAX_K == 1:
-    print(0, 1)
+    # k = 1일때 안전영역 0개
+    print(1, 0)
 else:
     k, c = sol(N, M, matrix, MAX_K, d)
     print(k ,c)
