@@ -10,13 +10,13 @@ sys.setrecursionlimit(10000)
 # 안전 영역의 수가 최대가 될 때 K과 그때의 안전 영역의 수를 구하여라
 
 N, M = map(int, input().split())
-matrix = [list(map(int, input().split()))]
+matrix = [list(map(int, input().split())) for _ in range(N)]
 
 MAX_K = max([max(li) for li in matrix])
 
 # 상, 하, 좌, 우
 d = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-visited = []
+
 
 # (안전 영역의 수, k)
 safety = []
@@ -34,13 +34,15 @@ def dfs(curr, k):
 # 최대 높이 -1 만큼 가능
 for k in range(1, MAX_K):
     count = 0
+    visited = []
     for i in range(N):
         for j in range(M):
             if (i, j) not in visited and matrix[i][j] > k:
                 visited.append((i, j))
                 dfs((i, j), k)
                 count += 1
-    safety.append((count, k))
+    if count != 0:
+        safety.append((count, k))
 
 
 safety.sort(key = lambda x:(-x[0], x[1]))
