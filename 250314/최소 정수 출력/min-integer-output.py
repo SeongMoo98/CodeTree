@@ -1,16 +1,18 @@
+# 1. 입력이 자연수 x 라면 배열에 x 추가
+# 2. 입력이 0이라면 배열에서 가장 작은 값을 출력하고, 그 값을 배열에서 제거
 import heapq
-N, M = map(int, input().split())
 
-# 가장 클 수를 골라 1씩 뺴는 작업을 M번 반복
-# 남아 있는 수 중 최댓값 구하기
-nums = list(map(int, input().split()))
-nums = [-num for _ in range(N)]
-# Max Heap
-heapq.heapify(nums)
+N = int(input)
+pq = []
+heapq.heapify(pq)
 
-# for _ in range(M):
-#     heapq.heap
+for _ in range(N):
+    num = int(input())
+    if num == 0:
+        if pq:
+            print(heapq.heapq.heappop(pq))
+        else:
+            print(0)
 
-print(dir(heapq))
-
-
+    else:
+        heapq.heappush(pq, num)
