@@ -13,6 +13,8 @@ for _ in range(N):
     if x == 0:
         if pq:
             print(-heapq.heappop(pq))
+        else:
+            print()
     else:
         heapq.heappush(pq, -x)
 
