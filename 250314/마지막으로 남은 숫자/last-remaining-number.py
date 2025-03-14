@@ -20,4 +20,4 @@ while len(nums) >= 2:
 if nums:
     print(-nums[0])
 else:
-    print(0)
+    print(-1)
