@@ -2,7 +2,7 @@
 # 2. 입력이 0이라면 배열에서 가장 작은 값을 출력하고, 그 값을 배열에서 제거
 import heapq
 
-N = int(input)
+N = int(input())
 pq = []
 heapq.heapify(pq)
 
