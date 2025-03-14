@@ -10,7 +10,7 @@ class PriorityQueue:
 
     def pop(self):
         if not self.empty():
-            return heapq.heappop(self.pq)
+            return -heapq.heappop(self.pq)
     
     def size(self):
         return len(self.pq)
