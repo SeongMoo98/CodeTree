@@ -5,21 +5,16 @@ import heapq
 
 N = int(input())
 nums = list(map(int, input().split()))
-heapq.heapify(nums)
 
 max_avg = -1
 
-# K는 1에서 N-2
-for k in range(1, N-1):
-    # k개 삭제
-    k_sum = sum(heapq.nlargest(k, nums))
-    # 제일 작은 수
-    min_val = nums[0]
+for k in range(1, N-2):
+    nums_temp = nums.copy()[k:]
+    heapq.heapify(nums_temp)
+    min_val = nums_temp[0]
 
-    avg = (sum(nums) - k_sum - min_val) / (N - k -1)
-    max_avg = max(max_avg, avg)
+    max_avg = max(max_avg, (sum(nums_temp) - min_val) / (len(nums_temp) - 1))
 
 
 print(f"{max_avg:.2f}")
-print("{.2f}".format(max_avg))
-print(round(max_avg, 2))
+# print("{:.2f}".format(max_avg))
