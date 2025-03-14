@@ -14,6 +14,8 @@ for i in range(N):
 
 for i in range(1, N):
     for j in range(1, N):
-        dp[i][j] = max(dp[i-1][j-1] + dp[i][j-1], dp[i-1][j-2] + dp[i-1][j])
+        dp[i][j] = max(dp[i-1][j] + matrix[i][j], dp[i][j-1] + matrix[i][j])
+
+print(dp)
 print(dp[N-1][N-1])
     
