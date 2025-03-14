@@ -15,9 +15,9 @@ while len(nums) >= 2:
 
     sub = abs(num1 - num2)
     if sub != 0:
-        heapq.heappush(-sub)
+        heapq.heappush(nums, -sub)
 
 if nums:
-    print(nums[0])
+    print(-nums[0])
 else:
     print(0)
