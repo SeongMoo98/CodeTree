@@ -13,4 +13,4 @@ dp[2], dp[3] = 1, 1
 for i in range(4, len(dp)):
     dp[i] = dp[i-2] + dp[i-3]
 
-print(dp[N])
+print(dp[N] % 10007)
