@@ -6,15 +6,18 @@ import heapq
 N = int(input())
 nums = list(map(int, input().split()))
 
+nums = nums[::-1]
+
 max_avg = -1
 
 for k in range(1, N-2):
-    nums_temp = nums.copy()[k:]
-    heapq.heapify(nums_temp)
-    min_val = nums_temp[0]
+    nums.pop()
+    num_temp = nums.copy()
+    heapq.heapify(num_temp)
+    heapq.heappop(num_temp)
 
-    max_avg = max(max_avg, (sum(nums_temp) - min_val) / (len(nums_temp) - 1))
-
+    max_avg = max(max_avg, sum(num_temp) / len(num_temp))    
+    
 
 print(f"{max_avg:.2f}")
 # print("{:.2f}".format(max_avg))
