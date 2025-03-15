@@ -8,21 +8,18 @@ N = int(input())
 nums = list(map(int, input().split()))
 # 왜 자꾸 nums를 heap으로 만들려고 했을까..!
 pq = []
-heapq.heappush(pq, arr[N-1])
-res_sum = arr[N-1]
+heapq.heappush(pq, nums[N-1])
+res_sum = nums[N-1]
 
 max_avg = -1
 for i in range(N-2, 0, -1):
-    heapq.heappush(pq, arr[i])
+    heapq.heappush(pq, nums[i])
     
-    res_sum += arr[i]
+    res_sum += nums[i]
 
     min_val = pq[0]
 
     max_avg = max(max_avg, (res_sum - min_val) / (N- i - 1))
-
-
-
 
 print(f"{max_avg:.2f}")
 # print("{:.2f}".format(max_avg))
