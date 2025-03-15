@@ -7,11 +7,11 @@ nums = list(map(int, input().split()))
 # 주어진 수가 3개가 되지 않는다면 -1 출력
 
 for i in range(N):
-    if i < 3:
+    if i < 2:
         print(-1)
     else:
         res = 1
-        smallest_three = heapq.nsmallest(3, nums)
+        smallest_three = heapq.nsmallest(3, nums[:i+1])
         for j in range(3):
             res *= smallest_three[j]
         print(res)
