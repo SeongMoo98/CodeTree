@@ -17,7 +17,7 @@ for i in range(N):
         res = 1
         for j in range(3):
             res *= -pq[j]
-            print(res)
+        print(res)
     else:
         # 3개의 smallest의 max값보다 작다면면
         if nums[i] < -pq[0]:
