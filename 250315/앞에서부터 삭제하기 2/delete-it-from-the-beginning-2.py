@@ -12,6 +12,6 @@ max_avg = -1
 nums = deque(nums)
 for k in range(1, N-1):
     nums.popleft()
-    max_avg = max(max_avg, (sum(nums)-min(nums)) / len(nums)-1 )
+    max_avg = max(max_avg, (sum(nums)-min(nums)) / (len(nums)-1) )
 print(f"{max_avg:.2f}")
 # print("{:.2f}".format(max_avg))
