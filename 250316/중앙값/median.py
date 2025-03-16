@@ -28,9 +28,7 @@ for t in range(T):
 
         # 홀수번째 원소
         if i % 2 == 0:
-            if len(max_heap) == len(min_heap):
-                print(mid)
-            elif len(max_heap) > len(min_heap):
+            if len(max_heap) > len(min_heap):
                 heapq.heappush(min_heap, mid)
                 mid = - heapq.heappop(max_heap)
             elif len(max_heap) < len(min_heap):
