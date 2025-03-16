@@ -20,7 +20,7 @@ for t in range(T):
 
     for i in range(1, M):
         # Max Heap
-        if mid > nums[i]:
+        if mid >= nums[i]:
             heapq.heappush(max_heap, -nums[i])
         # Min Heap
         elif mid < nums[i]:
