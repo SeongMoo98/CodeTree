@@ -35,7 +35,7 @@ def dijkstra(graph, start_node):
 
 dijkstra(graph, 1)
 
-for i in range(2 N+1):
+for i in range(2, N+1):
     print(-1 if dist[i] == INF else dist[i])
 
 
