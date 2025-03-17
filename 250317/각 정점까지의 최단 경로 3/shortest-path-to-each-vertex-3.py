@@ -27,14 +27,13 @@ def dijkstra(graph, start_node):
         # 이미 처리된 최단경로보다 긴 경로는 무시
         if dist[curr_node] < curr_dist:
             continue
+
         # curr_node -> next_node의 거리는 cost
         for next_node, cost in graph[curr_node]:
-
             next_dist = curr_dist + cost
-
             if dist[next_node] > next_dist:
                 dist[next_node] = next_dist
-                heapq.heappush(oq, (dist[curr_node] + next_dist, next_node)) 
+                heapq.heappush(pq, (dist[curr_node] + cost, next_node)) 
 
 dijkstra(graph, 1)
 
