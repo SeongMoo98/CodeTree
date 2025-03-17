@@ -1,59 +1,75 @@
-# 다익스트라 : 특정 Node에서 다른 모든 Node까지의 최단거리
-# 그렇다면 반대로 모든 정점으로부터 특정 도착점까지의 최단거리?
-# 모든 간선을 뒤집은 뒤, 특정 정점에서 다른 모든 정점까지 가는 최단거리를 구하면 된다.
-# ==> 다익스트라랑 같은 시간복잡도로 구할 수 있다
+# 도착점 A에서 시작점 B가 나오기전까지 최단거리를 만족하는 경로 중
+# 가장 수가 작은 곳으로 이동
 
+# 만약 최단거리를 만족하는 경로가 여러개라면,
+# 그 중 사전순으로 가장 앞선 경로를 찾기 위한 방법(번호가 작은순)
+
+# 1. 모든 Edge를 뒤집고, 도착점을 시작점으로 하는 Dijkstra 알고리즘 진행
+# 2. 시작점에서 출발하여 1 ~ N번까지 순회하며 최단 거리 경로 상에 존재할 수 있는 모든 Node를 찾아
+#    이동하는 것을 도착점에 도달할때 까지 반복
 from collections import defaultdict
 import heapq
-
-# 1~N-1은 학생이 살고있고, N은 학교
-# Directed Graph
-N, M = map(int, input().split())
-
-# 각 학생은 등교시 최단거리로 학교로 이동
-# 이때, 학교를 등교하는데 가장 오래걸리는 학생의 소요시간(거리 1 = 1초의 시간)
-
-graph = defaultdict(list)
-reversed_graph = defaultdict(list)
-for _ in range(M):
-    u, v, d = map(int, input().split())
-    # 일반 다익스트라
-    graph[u].append((v, d))
-    # 역 그래프
-    reversed_graph[v].append((u, d))
-
 INF = float('inf')
 
-distances = [INF] * (N+1)
+# 양방향 그래프
+# 정점 A에서 B까지의 최단 거리와 그 때의 경로를 구하여라
+# 최단 경로가 여러개라면 사전순으로 앞선순(정점의 번호가 작은 순)
+N, M = map(int, input().split())
 
-def dijkstra(graph, start):
-    pq = []
+graph = [[0] * (N+1) for _ in range(N+1)]
+for _ in range(M):
+    u, v, d = map(int, input().split())
+    graph[u][v] = d
+    graph[v][u] = d
 
-    heapq.heappush(pq, (0, start))
-    distances[start] = 0
+# A -> B
+A, B = map(int, input().split())
 
-    while pq:
-        # 현재 최소거리가 정해진 Node
-        curr_dist, curr_node = heapq.heappop(pq)
+distances = [INF] *(N+1)
+visited = [False] * (N + 1)
 
-        if distances[curr_node] < curr_dist:
+# 도착점을 시작으로 역 다익스트라
+distances[B] = 0
+
+# O(|V|^2) 다익스트라 코드
+for i in range(1, N+1):
+    min_index = -1
+    # 아직 방문하지 않은 Node 중 distance 값이 가장 작은 Node 찾기
+    for j in range(1, N+1):
+        if visited[j]:
+            continue
+        if min_index == -1 or distances[min_index] > distances[j]:
+            min_index = j
+
+        # 최솟값에 해당하는 Node 방문 처리
+        visited[min_index] = True
+
+        # 최솟값에 해당하는 정점에 연결된 Edge를 보며
+        # 시작점으로부터의 최단거리 값을 갱신
+        for j in range(1, N+1):
+            if graph[min_index][j] == 0:
+                continue
+
+            if distances[j] > distances[min_index] + graph[min_index][j]:
+                distances[j] = distances[min_index] + graph[min_index][j]
+
+# B에서 A로 가기위한 최단거리
+print(distances[A])
+# 도착점 A에서 시작점 B가 나오기전까지 최단거리를 만족하는 경로 중
+# 가장 수가 작은 곳으로 이동
+curr = A
+print(A, end=' ')
+while curr != B:
+    for i in range(1, N+1):
+        # i -> curr Edge가 없으면 Pass
+        if graph[i][curr] == 0:
             continue
 
-        for next_node, dist in graph[curr_node]:
-            # 현재 최소거리 + curr -> next
-            next_dist = distances[curr_node] + dist
-            if distances[next_node] > next_dist:
-                distances[next_node] = next_dist
-                heapq.heappush(pq, (next_dist, next_node))
+        # 만약 b -> ... -> i -> x ... -> a로 실제 최단거리가 나올 수 있는 상황이었다면,
+        # i를 작은 번호부터 보고 있으므로 선택
+        if distances[i] + graph[i][curr] == distances[curr]:
+            curr = i
+            break
 
-    return distances
-
-# 역그래프에서 N번 Node(학교)에서 출발
-# 이 때의 각 Node별 최단거리
-# ==> 모든 학생들의 학교까지의 최단거리
-distances = dijkstra(reversed_graph, N)
-
-print(max(distances[1:]))
-
-
-
+    print(curr, end=' ')
+    
