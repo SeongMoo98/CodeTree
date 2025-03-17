@@ -27,7 +27,7 @@ N, K = map(int, input().split())
 safety = [-1] + list(map(int, input().split()))
 # [0] : 제일 먼저 올라간 사람
 people = deque([])
-turn = 1
+turn = 0
 
 out = False
 while safety[1:].count(0) < K:
