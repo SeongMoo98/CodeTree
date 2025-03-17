@@ -28,7 +28,7 @@ def dijkstra(graph, start_node):
         if dist[curr_node] < curr_dist:
             continue
         # curr_node -> next_node의 거리는 cost
-        for next_node, cost in graph[curr_node]
+        for next_node, cost in graph[curr_node]:
 
             next_dist = curr_dist + cost
 
