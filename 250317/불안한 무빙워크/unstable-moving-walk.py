@@ -29,6 +29,7 @@ safety = [-1] + list(map(int, input().split()))
 people = deque([])
 turn = 1
 
+out = False
 while safety[1:].count(0) < K:
     # 1. 무빙워크 회전
     # 2N번째 칸 저장  
@@ -36,10 +37,15 @@ while safety[1:].count(0) < K:
     safety[2:] = safety[1:2*N]
     safety[1] = temp
     # 사람도 같이 이동
-    for i in range(len(people)):
-        people[i] += 1
-        if people[i] == N:
-            people.popleft()
+    if people:
+        for i in range(len(people)):
+            people[i] += 1
+            if people[i] == N:
+                out = True
+
+    if out:
+        people.popleft()
+        out = False
 
 
     # 2. 무빙워크가 회전하는 방향으로 한칸 이동
@@ -50,12 +56,15 @@ while safety[1:].count(0) < K:
             if (curr + 1) not in people and safety[curr+1] > 0:
                 people[i] += 1
                 # 이동한 칸의 안정성 -1
-                safety[curr] -= 1   
+                safety[curr+1] -= 1   
                 
                 # N번쨰 위치면 내림
                 # 근데 내리는 사람은 결국 맨 앞에 있는 사람
                 if people[i] == N:
-                    people.popleft()
+                    out = True
+    if out:
+        people.popleft()
+        out = False    
 
     # 3. 1번칸에 사람 없으면 사람 올림
     if 1 not in people and safety[1] > 0:
