@@ -17,16 +17,15 @@ INF = float('inf')
 N, M = map(int, input().split())
 
 graph = [[0] * (N+1) for _ in range(N+1)]
+distances = [INF] *(N+1)
+visited = [False] * (N + 1)
+
 for _ in range(M):
     u, v, d = map(int, input().split())
     graph[u][v] = d
     graph[v][u] = d
-
 # A -> B
 A, B = map(int, input().split())
-
-distances = [INF] *(N+1)
-visited = [False] * (N + 1)
 
 # 도착점을 시작으로 역 다익스트라
 distances[B] = 0
@@ -38,6 +37,7 @@ for i in range(1, N+1):
     for j in range(1, N+1):
         if visited[j]:
             continue
+
         if min_index == -1 or distances[min_index] > distances[j]:
             min_index = j
 
@@ -58,7 +58,7 @@ print(distances[A])
 # 도착점 A에서 시작점 B가 나오기전까지 최단거리를 만족하는 경로 중
 # 가장 수가 작은 곳으로 이동
 curr = A
-print(A, end=' ')
+print(curr, end=' ')
 while curr != B:
     for i in range(1, N+1):
         # i -> curr Edge가 없으면 Pass
