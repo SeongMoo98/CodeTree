@@ -30,5 +30,6 @@ floyd_warshall(graph)
 res = INF
 for i in range(1, N+1):
     for j in range(1, N+1):
-        res = min(res, graph[i][j] + graph[j][i])
+        if i != j:
+            res = min(res, graph[i][j] + graph[j][i])
 print(res)
