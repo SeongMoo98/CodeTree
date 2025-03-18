@@ -28,4 +28,6 @@ for i in range(N):
         else:
             if graph[i][j] != INF:
                 print(1, end=' ')
+            else:
+                print(0, end=' ')
     print()
