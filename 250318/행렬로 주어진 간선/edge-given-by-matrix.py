@@ -27,5 +27,5 @@ for i in range(N):
             print(1, end=' ')
         else:
             if graph[i][j] != INF:
-                print(graph[i][j], end=' ')
+                print(1, end=' ')
     print()
