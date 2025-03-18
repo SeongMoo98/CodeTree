@@ -26,6 +26,8 @@ for _ in range(M):
     graph[u][v]= d 
 
 for i in range(1, N+1):
+    if 1 <= i <= P:
+        visited[i][i] = True
     graph[i][i] = 0
 
 def floyd_warshall(graph):    
