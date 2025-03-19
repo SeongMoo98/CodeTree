@@ -40,7 +40,7 @@ def union(x, y):
 
 
 # m개의 간선 정보를 입력받습니다. 간선을 서로 연결해줍니다.
-for _ in range(m):
+for _ in range(M):
     x, y = tuple(map(int, input().split()))
     
     union(x, y)
