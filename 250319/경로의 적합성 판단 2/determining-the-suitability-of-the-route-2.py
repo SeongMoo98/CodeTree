@@ -15,17 +15,12 @@ def union(a, b):
     a, b = find(a), find(b)
 
     if a != b:
-        parent[b] = a
+        parent[a] = b
 
 for _ in range(M):
     a, b = map(int, input().split())
     
-    a, b = find(a), find(b)
-    if a < b:
-        # a가 부모가 됨
-        union(a, b)
-    else:
-        union(b, a)
+    union(a, b)
 
 # 4 2 1 .. k개
 # k개의 순서로 이동 가능한지
@@ -34,7 +29,8 @@ nodes = list(map(int, input().split()))
 
 res = 1
 for i in range(K-1):
-    if parent[nodes[i]] != parent[nodes[i+1]]:
+    # parent가 아니라 find가 되야지..!
+    if find(nodes[i]) != find(nodes[i+1]):
         res = 0
         break
     
