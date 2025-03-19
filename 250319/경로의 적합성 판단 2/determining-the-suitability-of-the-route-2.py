@@ -27,11 +27,17 @@ for _ in range(M):
 nodes = list(map(int, input().split()))
 
 
-res = 1
-for i in range(K-1):
-    # parent가 아니라 find가 되야지..!
-    if find(nodes[i]) != find(nodes[i+1]):
-        res = 0
-        break
-    
-print(res)
+# 경로를 이동하는 것이 가능하면 True, 아니라면 False를 기록합니다.
+is_pos = True
+path = [0] + list(map(int, input().split()))
+   
+# 만약 경로의 i번째 노드에서 i + 1번째 노드가 연결되어 있지 않으면 이동하는 것이 불가능합니다.
+# 이는 대표 번호가 동일한지로 판단 가능합니다.
+for i in range(1, k):
+    if find(path[i]) != find(path[i + 1]):
+        is_pos = False
+
+if is_pos: 
+    print(1)
+else:
+    print(0)
