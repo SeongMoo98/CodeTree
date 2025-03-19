@@ -33,5 +33,5 @@ for _ in range(M):
         union(a, b)
     else:
         a = int(inputs[1])
-        print(res[a])
+        print(res[find(a)])
 
