@@ -1,3 +1,6 @@
+import sys
+input = sys.stdin.readline
+input 
 # N개의 정점, M개의 Edge, Undirected Graph
 
 # k개의 점으로 이루어진 순서가 주어졌을 때, 그래프의 주어진 순서대로 이동이 가능한지 확인
@@ -9,7 +12,8 @@ def find(x):
     if parent[x] == x:
         return x
 
-    return find(parent[x])
+    parent[x] = find(parent[x])
+    return parent[x]
 
 def union(a, b):
     a, b = find(a), find(b)
