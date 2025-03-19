@@ -36,9 +36,9 @@ def floyd_warshall(graph):
                     if 1 <= i <= P or 1 <= j <= P or 1 <= k <= P or visited[i][k] or visited[k][j]:
                         visited[i][j] = True
                     graph[i][j] = graph[i][k] + graph[k][j]
-                    else:
-                        if 1 <= i <= P or 1 <= j <= P:
-                            visited[i][j] = True
+                else:
+                    if 1 <= i <= P or 1 <= j <= P:
+                        visited[i][j] = True
 
 floyd_warshall(graph)
 
