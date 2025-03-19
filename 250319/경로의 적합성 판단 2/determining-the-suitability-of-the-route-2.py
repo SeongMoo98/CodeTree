@@ -31,7 +31,7 @@ is_pos = True
    
 # 만약 경로의 i번째 노드에서 i + 1번째 노드가 연결되어 있지 않으면 이동하는 것이 불가능합니다.
 # 이는 대표 번호가 동일한지로 판단 가능합니다.
-for i in range(1, k):
+for i in range(1, K):
     if find(path[i]) != find(path[i + 1]):
         is_pos = False
 
