@@ -24,12 +24,10 @@ for _ in range(M):
 
 # 4 2 1 .. k개
 # k개의 순서로 이동 가능한지
-nodes = list(map(int, input().split()))
-
+path = [0] + list(map(int, input().split()))
 
 # 경로를 이동하는 것이 가능하면 True, 아니라면 False를 기록합니다.
 is_pos = True
-path = [0] + list(map(int, input().split()))
    
 # 만약 경로의 i번째 노드에서 i + 1번째 노드가 연결되어 있지 않으면 이동하는 것이 불가능합니다.
 # 이는 대표 번호가 동일한지로 판단 가능합니다.
