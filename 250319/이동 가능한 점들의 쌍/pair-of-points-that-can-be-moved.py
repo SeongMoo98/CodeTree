@@ -5,12 +5,10 @@
 
 # M개의 길들을 이용해 점 A -> B까지 최소 비용으로 이동하고자 한다.
 
-# 출발점과 도착점을 포함해 경로 내에 최소 하나 이상의 빨간점 포함
+# 출발점과 도착점을 포함해 경로 내에 최소 하나 이상의 빨간점 포함되어있어야 이동
 
-# 또, 한개의 점을 여러번 방문해도 괜찮다
-
-# 주어진 출발점, 도착점들 쌍 Q개 중 빨간색 점을 최소 하나 이상 지나갈 수 있는 경우가
-# 몇개인지 구하고, 가능한 경우 각 최소비용의 총합을 구하여라
+# 출발점, 도착점 쌍 Q개 중 빨간색 점을 최소 하나 이상 지나 갈 수 있는 경우가 몇개인지
+# 가능한 경우 각 최소 비용의 총 합을 구하여라
 
 N, M, P, Q = map(int, input().split())
 
@@ -35,12 +33,12 @@ def floyd_warshall(graph):
         for i in range(1, N+1):
             for j in range(1, N+1):
                 if graph[i][j] > graph[i][k] + graph[k][j]:
-                    if 1 <= i <= P or 1 <= j <= P or  1 <= k <= P or visited[i][k] or visited[k][j]:
+                    if 1 <= i <= P or 1 <= j <= P or 1 <= k <= P or visited[i][k] or visited[k][j]:
                         visited[i][j] = True
                     graph[i][j] = graph[i][k] + graph[k][j]
-                else:
-                    if 1 <= i <= P or 1 <= j <= P:
-                        visited[i][j] = True
+                    else:
+                        if 1 <= i <= P or 1 <= j <= P:
+                            visited[i][j] = True
 
 floyd_warshall(graph)
 
