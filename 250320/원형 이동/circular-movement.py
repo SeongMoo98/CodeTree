@@ -41,6 +41,8 @@ for i in range(1, N+1):
     else:
         graph[i].append((0, i+1))
         graph[i+1].append((0, i))
+print(graph)
+
 
 def prim(graph, start):
     MST, total_weight = [], 0
@@ -66,7 +68,8 @@ def prim(graph, start):
 
 
 MST, total_weight = prim(graph, 1)
-if K > total_weight:
+print(total_weight)
+if K >= total_weight:
     print(1)
 else:
     print(0)
