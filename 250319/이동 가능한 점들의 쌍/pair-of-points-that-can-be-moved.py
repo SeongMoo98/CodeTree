@@ -14,31 +14,19 @@ N, M, P, Q = map(int, input().split())
 
 INF = float('inf')
 graph = [[INF]*(N+1) for _ in range(N+1)]
-# 빨간점을 방문했는지 확인
-visited = [[False] *(N+1) for _ in range(N+1)]
 
 for _ in range(M):
     u, v, d = map(int, input().split())
-    if 1 <= u <= P or 1 <= v <= P:
-        visited[u][v] = True
     graph[u][v]= d 
 
 for i in range(1, N+1):
-    if 1 <= i <= P:
-        visited[i][i] = True
     graph[i][i] = 0
 
 def floyd_warshall(graph):    
     for k in range(1, N+1):
         for i in range(1, N+1):
             for j in range(1, N+1):
-                if graph[i][j] > graph[i][k] + graph[k][j]:
-                    if 1 <= i <= P or 1 <= j <= P or 1 <= k <= P or visited[i][k] or visited[k][j]:
-                        visited[i][j] = True
-                    graph[i][j] = graph[i][k] + graph[k][j]
-                else:
-                    if 1 <= i <= P or 1 <= j <= P:
-                        visited[i][j] = True
+                graph[i][j] = min(graph[i][j], graph[i][k]+graph[k][j])
 
 floyd_warshall(graph)
 
@@ -46,9 +34,14 @@ count = 0
 res = 0
 for _ in range(Q):
     A, B = map(int, input().split())
-    if graph[A][B] != INF and visited[A][B]:
-        count += 1
-        res += graph[A][B]
+    distance = INF
+    for p in range(1, P+1):
+        distance = min(distance, graph[A][p] + graph[p][B])
+    if distance >= INF:
+        continue
+
+    count += 1
+    res += distance
 
 print(count)
 print(res)
