@@ -19,7 +19,7 @@ def prim(graph, start):
 
     # 출발 Vertex에 연결된 Vertex들
     for w, v in graph[start]:
-        heapq.heappush(pq, (w, u, v))
+        heapq.heappush(pq, (w, start, v))
     # 시작점을 방문 처리
     visited.append(start)
 
