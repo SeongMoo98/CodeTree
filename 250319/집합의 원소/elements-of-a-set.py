@@ -6,7 +6,7 @@
 
 N, M = map(int, input().split())
 
-parent = [i for i in range(1, N+1)]
+parent = [i for i in range(N+1)]
 
 def find(x):
     if parent[x] == x:
@@ -18,7 +18,7 @@ def union(a, b):
     parent_a, parent_b = find(a), find(b)
 
     if parent_a != parent_b:
-        parent[a] = b
+        parent[parent_a] = parent_b
 
 for _ in range(M):
     num, a, b = map(int, input().split())
@@ -32,5 +32,5 @@ for _ in range(M):
             print(1)
         else:
             print(0)
-            
+
             
