@@ -24,7 +24,7 @@ def find(x):
     return parent[x]
 
 def union(a, b):
-    a, b = find(a), find(b):
+    a, b = find(a), find(b)
 
     if a != b:
         parent[a] = b
