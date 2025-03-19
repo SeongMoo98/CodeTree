@@ -1,3 +1,5 @@
+import sys
+input = sys.stdin.readline
 # 1 ~ N번까지 N개의 정점과 M개의 간선
 # MST를 구하여라
 
