@@ -41,5 +41,4 @@ for x in range(1, N+1):
     # 만나서 함께 가는 경우
     res = min(res, graph[v1][x] + graph[v2][x] + graph[x][e])
 
-print(res)
-    
+print(res if res != INF else -1)
