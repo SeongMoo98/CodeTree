@@ -14,6 +14,7 @@ for _ in range(M):
     # a > b라는 뜻
     # 이를 1이라고 하자
     graph[a][b] = 1
+
 for i in range(1, N+1):
     graph[i][i] = 0
 
@@ -23,4 +24,16 @@ def floyd_warshall(graph):
             for j in range(1, N+1):
                 graph[i][j] = min(graph[i][j], graph[i][k] + graph[k][j])
 
-print(grpah)
+floyd_warshall(graph)
+
+# 크기를 비교할 수 없는 쌍 : i -> j 없고, j -> i도 없고
+for i in range(1, N+1):
+    count = 0
+    for j in range(1, N+1):
+        if i == j:
+            continue
+        if graph[i][j] == graph[j][i] == INF:
+            count += 1
+    print(count)
+
+        
