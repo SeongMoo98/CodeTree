@@ -38,8 +38,6 @@ for i in range(N-1):
 
 edges.sort()
 
-print(edges)
-
 def kruskal(edges):
     MST = []
     total_weight = 0
