@@ -19,13 +19,18 @@ def union(a, b):
 
 for _ in range(M):
     a, b = map(int, input().split())
-    # a가 부모가 됨
-    union(a, b)
-
+    
+    a, b = find(a), find(b)
+    if a < b:
+        # a가 부모가 됨
+        union(a, b)
+    else:
+        union(b, a)
 
 # 4 2 1 .. k개
 # k개의 순서로 이동 가능한지
 nodes = list(map(int, input().split()))
+
 
 res = 1
 for i in range(K-1):
