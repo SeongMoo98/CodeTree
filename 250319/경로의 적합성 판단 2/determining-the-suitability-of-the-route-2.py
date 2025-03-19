@@ -1,41 +1,51 @@
-import sys
-input = sys.stdin.readline
-input 
-# N개의 정점, M개의 Edge, Undirected Graph
+# 변수 선언 및 입력:
+n, m, k = tuple(map(int, input().split()))
 
-# k개의 점으로 이루어진 순서가 주어졌을 때, 그래프의 주어진 순서대로 이동이 가능한지 확인
-N, M, K = map(int, input().split())
+# 번호별 그룹을 관리합니다.
+uf = [0] * (n + 1)
 
-parent = [i for i in range(N+1)]
+# 초기 uf 값을 설정합니다.
+for i in range(1, n + 1):
+    uf[i] = i
 
+
+# x의 대표 번호를 찾아줍니다.
 def find(x):
-    if parent[x] == x:
+    # x가 루트 노드라면 x값을 반환합니다.
+    if uf[x] == x:
         return x
+    # x가 루트 노드가 아니라면
+    # x의 부모인 uf[x]에서 탐색을 더 진행한 뒤
+    # 찾아낸 루트 노드를 uf[x]에 넣어줌과 동시에
+    # 해당 노드값을 반환합니다.
+    uf[x] = find(uf[x])
+    return uf[x]
 
-    parent[x] = find(parent[x])
-    return parent[x]
 
-def union(a, b):
-    a, b = find(a), find(b)
+# x, y가 같은 집합이 되도록 합니다.
+def union(x, y):
+    # x, y의 대표 번호를 찾은 뒤
+    # 연결해줍니다.
+    X = find(x)
+    Y = find(y)
+    uf[X] = Y
 
-    if a != b:
-        parent[a] = b
 
-for _ in range(M):
-    a, b = map(int, input().split())
-    
+# 주어진 간선으로
+# 연결관계를 만들어줍니다.
+for _ in range(m):
+    a, b = tuple(map(int, input().split()))
+
+    # 합치는 명령입니다.
     union(a, b)
-
-# 4 2 1 .. k개
-# k개의 순서로 이동 가능한지
-path = [0] + list(map(int, input().split()))
 
 # 경로를 이동하는 것이 가능하면 True, 아니라면 False를 기록합니다.
 is_pos = True
+path = [0] + list(map(int, input().split()))
    
 # 만약 경로의 i번째 노드에서 i + 1번째 노드가 연결되어 있지 않으면 이동하는 것이 불가능합니다.
 # 이는 대표 번호가 동일한지로 판단 가능합니다.
-for i in range(1, K):
+for i in range(1, k):
     if find(path[i]) != find(path[i + 1]):
         is_pos = False
 
