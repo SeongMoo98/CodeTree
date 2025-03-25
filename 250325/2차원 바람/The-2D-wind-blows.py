@@ -11,7 +11,9 @@ arr = [list(map(int,input().split())) for _ in range(N)]
 d = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
 res = [[0]*M for _ in range(N)]
-
+for i in range(N):
+    for j in range(M):
+        res[i][j] = arr[i][j]
 
 for _ in range(Q):
     # (r1, c1) : 좌 상단
