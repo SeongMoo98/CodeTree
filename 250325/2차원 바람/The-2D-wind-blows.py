@@ -10,6 +10,9 @@ N, M, Q = map(int, input().split())
 arr = [list(map(int,input().split())) for _ in range(N)]
 d = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
+res = [[0]*M for _ in range(N)]
+
+
 for _ in range(Q):
     # (r1, c1) : 좌 상단
     # (r2, c2) : 우 하단
@@ -39,20 +42,25 @@ for _ in range(Q):
 
     for idx, (i, j) in enumerate(moving_idx):    
         arr[i][j] = moving_num[idx]
-            
-    new_arr = arr.copy()
+                        
     # 평균 구하기
-    for i in range(r1, r2+1):
-        for j in range(c1, c2+1):
-            temp = [arr[i][j]]
-            for di, dj in d:
-                ni, nj = i + di, j + dj
-                if 0 <= ni < N and 0 <= nj < M:
-                    temp.append(arr[ni][nj])
-            new_arr[i][j] = int(sum(temp)/len(temp))
-        
     for i in range(N):
         for j in range(M):
-            print(new_arr[i][j], end=' ')
-        print()
+            if r1 <= i <= r2 and c1 <= j <= c2:
+                temp = [arr[i][j]]
+                for di, dj in d:
+                    ni, nj = i + di, j + dj
+                    if 0 <= ni < N and 0 <= nj < M:
+                        temp.append(arr[ni][nj])
+                res[i][j] = int(sum(temp)/len(temp))
+            else:
+                res[i][j] = arr[i][j]
+    for i in range(N):
+        for j in range(M):
+            arr[i][j] = res[i][j]
+        
+for i in range(N):
+    for j in range(M):
+        print(res[i][j], end=' ')
+    print()
 
