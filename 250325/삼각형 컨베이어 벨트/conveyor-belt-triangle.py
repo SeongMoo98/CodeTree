@@ -8,7 +8,7 @@
 
 N, T = map(int, input().split())
 arr = []
-for i in range(N):
+for i in range(3):
     arr.extend(list(map(int, input().split())))
     
 for t in range(T):
@@ -18,6 +18,6 @@ for t in range(T):
 
 for i in range(1, len(arr)+1):
     print(arr[i-1], end=' ')
-    
+
     if i % N == 0:
         print()
