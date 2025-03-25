@@ -10,8 +10,7 @@ N, T = map(int, input().split())
 arr = []
 for i in range(N):
     arr.extend(list(map(int, input().split())))
-
-
+    
 for t in range(T):
     temp = arr[-1]
     arr[1:] = arr[0:len(arr)-1]
