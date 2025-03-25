@@ -17,6 +17,6 @@ for t in range(T):
     arr[0] = temp
 
 for i in range(N):
-    for j in range(3):
+    for j in range(N):
         print(arr[i*3 + j], end=' ')
     print()
