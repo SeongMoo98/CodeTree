@@ -6,27 +6,38 @@ N = int(input())
 lines = [[0, 0]] + [list(map(int, input().split())) for _ in range(N)]
 
 res = 0
+selected_lines = []
 
-def backtrack(curr, ans, visited):
+def overlapped(line1, line2):
+    l1, r1 = line1
+    l2, r2 = line2
+
+    # 겹치는지 판단
+    return (l1 <= l2 <= r1 ) or \
+           (l1 <= r2 <= r2) or \
+           (l2 <= l1 <= r2) or \
+           (l2 <= r1 <= r2)
+
+def possible():
+    for i, line1 in enumerate(selected_lines):
+        for j, line2 in enumerate(selected_lines):
+            # 겹치는지 안겹치는지 확인
+            # line이 같지 않고 안겹칠 때
+            if i < j and overlapped(line1, line2):
+                return False
+
+def backtrack(cnt):
     global res
 
-    l, r = lines[curr]
-    if visited[l] == True or visited[r] == True:
-        return 
-    else:
-        for idx in range(l, r+1):
-            visited[idx] = True
+    if cnt == N:
+        if possible():
+            res = max(res, len(selected_lines))
 
-    res = max(res, len(ans)-1)
+    selected_lines.append(lines[cnt])
+    backtrack(cnt+1)
+    selected_lines.pop()
 
+    backtrack(cnt+1)
 
-    for i in range(curr+1, N+1):
-        ans.append(lines[i])
-        backtrack(i, ans, visited)
-        ans.pop() 
-
-# 이건 Line 0을 꼭 포함하는 코드다
-# backtrack(0, [], [False] * 1001)
-
-backtrack(0, [[0, 0]], [False] * 1001)
+backtrack(0)
 print(res)
