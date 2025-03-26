@@ -13,7 +13,7 @@ def overlapped(line1, line2):
     l2, r2 = line2
 
     # 겹치는지 판단
-    return (l1 <= l2 <= r1 ) or \
+    return (l1 <= l2 <= r1) or \
            (l1 <= r2 <= r2) or \
            (l2 <= l1 <= r2) or \
            (l2 <= r1 <= r2)
@@ -25,6 +25,7 @@ def possible():
             # line이 같지 않고 안겹칠 때
             if i < j and overlapped(line1, line2):
                 return False
+    return True
 
 def backtrack(cnt):
     global res
@@ -32,6 +33,7 @@ def backtrack(cnt):
     if cnt == N:
         if possible():
             res = max(res, len(selected_lines))
+        return
 
     selected_lines.append(lines[cnt])
     backtrack(cnt+1)
