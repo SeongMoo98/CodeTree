@@ -33,7 +33,7 @@ def backtrack(cnt):
     if cnt == N:
         if possible():
             res = max(res, len(selected_lines))
-            return
+        return
 
     selected_lines.append(lines[cnt])
     backtrack(cnt+1)
