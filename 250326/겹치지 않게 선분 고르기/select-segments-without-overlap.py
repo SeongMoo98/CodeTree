@@ -17,10 +17,8 @@ def backtrack(curr, ans, visited):
         for idx in range(l, r+1):
             visited[idx] = True
 
+    res = max(res, len(ans)-1)
 
-    if curr == N:
-        res = max(res, len(ans))
-        return 
 
     for i in range(curr+1, N+1):
         ans.append(lines[i])
@@ -30,5 +28,5 @@ def backtrack(curr, ans, visited):
 # 이건 Line 0을 꼭 포함하는 코드다
 # backtrack(0, [], [False] * 1001)
 
-backtrack(0, [], [False] * 1001)
+backtrack(0, [[0. 0]], [False] * 1001)
 print(res)
