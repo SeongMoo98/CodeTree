@@ -3,7 +3,7 @@
 # 끝점을 겅유하는 것 역시 겹친 것
 
 N = int(input())
-lines = [[0, 0]] + [list(map(int, input().split())) for _ in range(N)]
+lines = [list(map(int, input().split())) for _ in range(N)]
 
 res = 0
 selected_lines = []
