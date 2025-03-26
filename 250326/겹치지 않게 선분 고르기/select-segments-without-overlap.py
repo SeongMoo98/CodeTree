@@ -9,20 +9,22 @@ res = 0
 
 def backtrack(curr, ans, visited):
     global res
-    if curr == N+1:
-        res = max(res, len(ans)-1)
-        return 
 
     l, r = lines[curr]
-
     if visited[l] == True or visited[r] == True:
-        return
+        return 
     else:
-        visited[l:r+1] = [True] * len(visited[l:r+1])
+        for idx in range(l, r+1):
+            visited[idx] = True
 
-    for i in range(curr, N+1):
+
+    if curr == N:
+        res = max(res, len(ans))
+        return 
+
+    for i in range(curr+1, N+1):
         ans.append(lines[i])
-        backtrack(i+1, ans, visited)
+        backtrack(i, ans, visited)
         ans.pop() 
 
 # 이건 Line 0을 꼭 포함하는 코드다
