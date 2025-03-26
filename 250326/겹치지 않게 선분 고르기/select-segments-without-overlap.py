@@ -28,5 +28,5 @@ def backtrack(curr, ans, visited):
 # 이건 Line 0을 꼭 포함하는 코드다
 # backtrack(0, [], [False] * 1001)
 
-backtrack(0, [[0. 0]], [False] * 1001)
+backtrack(0, [[0, 0]], [False] * 1001)
 print(res)
