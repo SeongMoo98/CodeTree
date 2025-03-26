@@ -39,7 +39,41 @@ def backtrack(cnt):
     backtrack(cnt+1)
     selected_lines.pop()
 
+    # 이게 왜 여기있는거지
     backtrack(cnt+1)
 
 backtrack(0)
 print(res)
+
+
+# ------------------------------------------------------ # 
+
+
+# N = int(input())
+# lines = [[0, 0]] + [list(map(int, input().split())) for _ in range(N)]
+
+# res = 0
+
+# def backtrack(curr, ans, visited):
+#     global res
+
+#     l, r = lines[curr]
+#     if visited[l] == True or visited[r] == True:
+#         return 
+#     else:
+#         for idx in range(l, r+1):
+#             visited[idx] = True
+
+#     res = max(res, len(ans)-1)
+
+
+#     for i in range(curr+1, N+1):
+#         ans.append(lines[i])
+#         backtrack(i, ans, visited)
+#         ans.pop() 
+
+# # 이건 Line 0을 꼭 포함하는 코드다
+# # backtrack(0, [], [False] * 1001)
+
+# backtrack(0, [[0, 0]], [False] * 1001)
+# print(res)
