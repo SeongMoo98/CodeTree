@@ -1,46 +1,45 @@
-n = int(input())
-segments = [
-    tuple(map(int, input().split()))
-    for _ in range(n)
-]
+# 수직선상의 N개의 선분이 주어졌을 때, 
+# 서로 겹치지 않고 고를 수 있는 가장 많은 선분의 수
+# 끝점을 겅유하는 것 역시 겹친 것
 
-ans = 0
-selected_segs = list()
+N = int(input())
+lines = [list(map(int, input().split())) for _ in range(N)]
 
+res = 0
+selected_lines = []
 
-def overlapped(seg1, seg2):
-    (ax1, ax2), (bx1, bx2) = seg1, seg2
+def overlapped(line1, line2):
+    l1, r1 = line1
+    l2, r2 = line2
 
-    # 두 선분이 겹치는지 여부는
-    # 한 점이 다른 선분에 포함되는 경우로 판단 가능합니다. 
-    return (ax1 <= bx1 and bx1 <= ax2) or (ax1 <= bx2 and bx2 <= ax2) or \
-           (bx1 <= ax1 and ax1 <= bx2) or (bx1 <= ax2 and ax2 <= bx2)
-
+    # 겹치는지 판단
+    return (l1 <= l2 <= r1) or \
+           (l1 <= r2 <= r1) or \
+           (l2 <= l1 <= r2) or \
+           (l2 <= r1 <= r2)
 
 def possible():
-    # 단 한쌍이라도 선분끼리 겹치면 안됩니다
-    for i, seg1 in enumerate(selected_segs):
-        for j, seg2 in enumerate(selected_segs):
-            if i < j and overlapped(seg1, seg2):
+    for i, line1 in enumerate(selected_lines):
+        for j, line2 in enumerate(selected_lines):
+            # 겹치는지 안겹치는지 확인
+            # line이 같지 않고 안겹칠 때
+            if i < j and overlapped(line1, line2):
                 return False
-
     return True
 
+def backtrack(cnt):
+    global res
 
-def find_max_segments(cnt):
-    global ans
-    
-    if cnt == n:
+    if cnt == N:
         if possible():
-            ans = max(ans, len(selected_segs))
-        return
-    
-    selected_segs.append(segments[cnt])
-    find_max_segments(cnt + 1)
-    selected_segs.pop()
-    
-    find_max_segments(cnt + 1)
+            res = max(res, len(selected_lines))
+            return
 
+    selected_lines.append(lines[cnt])
+    backtrack(cnt+1)
+    selected_lines.pop()
 
-find_max_segments(0)
-print(ans)
+    backtrack(cnt+1)
+
+backtrack(0)
+print(res)
