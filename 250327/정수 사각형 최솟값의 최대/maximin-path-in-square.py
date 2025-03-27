@@ -6,7 +6,7 @@ N = int(input())
 arr = [list(map(int, input().split())) for _ in range(N)]
 
 if N == 1:
-    print(arr[0])
+    print(arr[0][0])
 else:
     dp =[[INF] * (N+1)] + [[INF] + [0] * N for _ in range(N)]
 
