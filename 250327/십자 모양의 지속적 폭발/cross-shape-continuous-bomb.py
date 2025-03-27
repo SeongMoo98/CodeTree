@@ -31,17 +31,18 @@ def bomb_size(size, ci, cj):
 
 
 for col in cols:
-    new_arr = [[0] * N for _ in range(N)]
+    new_arr = [[0] * N for _ in range(N)]   
     for i in range(N):
         if arr[i][col] != 0:
             bomb_idx = bomb_size(arr[i][col], i, col)
             break
+    else:
+        continue
     # 폭탄 터트릴 곳이 있을 때
     if bomb_idx:
         # 폭탄 터트리기
         for ni, nj in bomb_idx:
             arr[ni][nj] = 0
-
 
         # 밑으로 중력
         for j in range(N):
@@ -54,9 +55,14 @@ for col in cols:
             for i in range(len(temp)):
                 new_arr[curr_idx][j] = temp[i]
                 curr_idx -= 1 
+
+    for i in range(N):
+        for j in range(N):
+            arr[i][j] = new_arr[i][j]
+
 for i in range(N):
     for j in range(N):
-        print(new_arr[i][j], end=' ')
+        print(arr[i][j], end=' ')
     print()
             
 
