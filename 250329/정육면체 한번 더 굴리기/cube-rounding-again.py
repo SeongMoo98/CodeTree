@@ -31,19 +31,20 @@ board = [list(map(int, input().split())) for _ in range(N)]
 dice = {"Up" : 1, "Down" : 6, "Right" : 3, "Left" : 4, "Front" : 2, "Back" : 5}
 ci, cj = 0, 0
 direction = "R"
+
 d = {"R" : (0, 1), "L" : (0, -1), "U":(-1, 0), "D":(1, 0)}
 score = 0
+
 def move(dice, ci, cj, direction):
-    
     # 현재 방향에서 한칸 이동 가능한지
     if direction == "R":
-        direction = "L" if cj + 1 > N else "R"
+        direction = "L" if cj + 1 >= N else "R"
     elif direction == "L":
         direction = "R" if cj - 1 < 0 else "L"
     elif direction == "U":
         direction = "D" if ci - 1 < 0 else "U"
     elif direction == "D":
-        direction = "U" if ci + 1 > N else "D"
+        direction = "U" if ci + 1 >= N else "D"
     di, dj = d[direction]
     ni, nj = ci + di, cj + dj
 
@@ -68,6 +69,7 @@ def bfs(ci, cj):
     global score
     visited = [(ci, cj)]
     q = deque([(ci, cj)])
+
     curr_num = board[ci][cj]
     count = 1
     while q:
