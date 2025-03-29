@@ -37,13 +37,13 @@ def move(dice, ci, cj, direction):
     
     # 현재 방향에서 한칸 이동 가능한지
     if direction == "R":
-        direction = "L "if cj + 1 > N else "R"
+        direction = "L" if cj + 1 > N else "R"
     elif direction == "L":
-        direction = "R "if cj - 1 < 0 else "L"
+        direction = "R" if cj - 1 < 0 else "L"
     elif direction == "U":
-        direction = "D "if ci - 1 < 0 else "U"
+        direction = "D" if ci - 1 < 0 else "U"
     elif direction == "D":
-        direction = "U "if ci + 1 > N else "D"
+        direction = "U" if ci + 1 > N else "D"
     di, dj = d[direction]
     ni, nj = ci + di, cj + dj
 
