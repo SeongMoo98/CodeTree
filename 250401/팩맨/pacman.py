@@ -186,7 +186,13 @@ def monster_dead(dead_monsters):
             else:
                 for k in range(len(dead_monsters[i][j])):
                     if dead_monsters[i][j][k] > 0:
-                        dead_monsters[i][j][k] -= 1 
+                        dead_monsters[i][j][k] -= 1
+                for k in range(len(dead_monsters[i][j])):
+                    if dead_monsters[i][j][k] > 0:
+                        break
+                else:
+                    dead_monsters[i][j] = []
+                    
                 
     return dead_monsters
 
