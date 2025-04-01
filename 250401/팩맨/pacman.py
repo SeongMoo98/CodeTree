@@ -13,8 +13,15 @@ monsters = dict()
 monsters_dir = dict()
 monsters_num = M
 
-# turn 수 기록
-dead_monsters = [[0]*N for _ in range(N)]
+# list 참조 문제
+# 빈 리스트롤 곱하여서 사용하였기 때문에 4개의 빈 리스트라 해도 같은 주소 공유
+# ==> 수정, 복사가 동일하게 나타남
+dead_monsters = [
+    [[], [], [], []],
+    [[], [], [], []],
+    [[], [], [], []],
+    [[], [], [], []]
+]
 # [i, j, d] 기록
 copy_monsters = [[0]*N for _ in range(N)]
 
@@ -58,7 +65,7 @@ def monster_move(monsters, monsters_dir, pi, pj, dead_monsters):
             ni, nj = mi + directions[md][0], mj + directions[md][1]
 
             # 격자안, 시체 x, 팩맨 x
-            if 0 <= ni < N and 0 <= nj < N and dead_monsters[ni][nj] == 0 and (ni, nj) != (pi, pj):
+            if 0 <= ni < N and 0 <= nj < N and dead_monsters[ni][nj] == [] and (ni, nj) != (pi, pj):
                 monsters[mon_num] = [ni, nj]
                 monsters_dir[mon_num] = md
                 break
@@ -159,7 +166,9 @@ def packman_move(pi, pj, monsters, monsters_dir, dead_monsters):
             mi, mj = monsters[remove_num]
             monsters.pop(remove_num)
             monsters_dir.pop(remove_num)
-            dead_monsters[mi][mj] = 2   
+            
+            dead_monsters[mi][mj].append(2)
+            
 
     pi, pj = ni3, nj3
 
@@ -172,8 +181,13 @@ def monster_dead(dead_monsters):
     # 시체가 생기고 나면, 시체가 소멸되기 까지는 총 두턴이 픨요
     for i in range(N):
         for j in range(N):
-            if dead_monsters[i][j] > 0:
-                dead_monsters[i][j] -= 1
+            if dead_monsters[i][j] == []:
+                continue
+            else:
+                for k in range(len(dead_monsters[i][j])):
+                    if dead_monsters[i][j][k] > 0:
+                        dead_monsters[i][j][k] -= 1 
+                
     return dead_monsters
 
 def monster_alive(monsters_num, copy_monsters):
