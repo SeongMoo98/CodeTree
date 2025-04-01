@@ -22,9 +22,13 @@ dead_monsters = [
     [[], [], [], []],
     [[], [], [], []]
 ]
-# [i, j, d] 기록
-copy_monsters = [[0]*N for _ in range(N)]
-
+# d 기록록
+copy_monsters = [
+    [[], [], [], []],
+    [[], [], [], []],
+    [[], [], [], []],
+    [[], [], [], []]
+]
 # 상, 좌상, 좌, 좌하, 하, 우하, 우, 우상
 directions = {
     0: (-1, 0),
@@ -48,7 +52,7 @@ def monster_copy(monsters, monsters_dir,copy_monsters):
     # 이 때, 복제된 몬스터는 아직 부화되지 않은 상태로 움직이지 못한다.
     # 복제된 몬스터는 현재 시점을 기준으로 각 몬스터와 동일한 방향을 지니게 되며, 부화할 시 해당 방향을 지님
     for mon_num, (r, c) in monsters.items():
-        copy_monsters[r][c] = [r, c, monsters_dir[mon_num]]
+        copy_monsters[r][c].append(monsters_dir[mon_num])
 
     return copy_monsters
 
@@ -200,11 +204,14 @@ def monster_alive(monsters_num, copy_monsters):
     # 알 형태의 몬스터가 부화(처음 복제된 몬스터의 방향을 지닌 채로 깨어남)
     for i in range(N):
         for j in range(N):
-            if copy_monsters[i][j] != 0:
-                monsters_num += 1
-                monsters[monsters_num] = [copy_monsters[i][j][0], copy_monsters[i][j][1]]
-                monsters_dir[monsters_num] = copy_monsters[i][j][2]
-                copy_monsters[i][j] = 0
+            if copy_monsters[i][j] == []:
+                continue
+            else:
+                for k in range(len(copy_monsters[i][j])):
+                    monsters_num += 1
+                    monsters[monsters_num] = [i, j]
+                    monsters_dir[monsters_num] = copy_monsters[i][j][k]
+                copy_monsters[i][j] = []
 
     return monsters_num, copy_monsters
 
