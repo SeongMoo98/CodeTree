@@ -13,21 +13,25 @@ def make_square(ci, cj, height, length):
         for l in range(length+1):
             ni, nj = ci + h, cj + l
             if 0 <= ni < N and 0 <= nj < M:
-                if matrix[ni][nj] > 0:
-                    continue
-                else:
+                if matrix[ni][nj] <= 0:
                     return -1, -1
-    return abs(ci-height) + 1, abs(cj-length) + 1
+            else:
+                return -1, -1
+    return (ni - ci) + 1, (nj - cj) + 1
 
 res = 0
 for i in range(N):
     for j in range(M):
+        
         if matrix[i][j] <= 0:
             continue
+
         for height in range(N):
             for length in range(M):
                 res_h, res_l = make_square(i, j, height, length)
-                if res_h != -1 and res_l != -1:
-                    res = max(res, res_h*res_l)
+                if res_h == -1 and res_l == -1:
+                    break
+                else:
+                    res = max(res, (res_h) * (res_l))
 
 print(res if res !=0 else -1)
