@@ -48,9 +48,9 @@ for i in range(N):
     for j in range(N):
         if matrix[i][j] == 1:
             gold_count += 1
-if M * glod_count >= (2*(N-1))**2 + (2*(N-1) + 1)**2:
+if M * gold_count >= (2*(N-1))**2 + (2*(N-1) + 1)**2:
     res = gold_count
-    
+
 for K in range(2*(N-1) - 1 , -1, -1):
     for i in range(N):
         for j in range(N):
