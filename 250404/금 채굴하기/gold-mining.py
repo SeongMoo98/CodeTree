@@ -68,7 +68,7 @@ def get_gold_count(ci, cj, k):
     gold_count = 0
     for i in range(N):
         for j in range(N):
-            if abs(i - ci) + abs(j - cj) <= k:
+            if abs(i - ci) + abs(j - cj) <= k and matrix[i][j] == 1:
                 gold_count += 1
     return gold_count
 
