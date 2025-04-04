@@ -12,9 +12,9 @@ matrix = [list(map(int, input().split())) for _ in range(N)]
 
 def make_square(ci, cj, N, M, height, length):
     square = []
-    for height in range(height):
-        for length in range(length):
-            ni, nj = ci + height, cj + length
+    for h in range(height+1):
+        for l in range(length+1):
+            ni, nj = ci + h, cj + l
             if 0 <= ni < N and 0 <= nj < M:
                 square.append((ni, nj))
             else:
@@ -37,15 +37,15 @@ for i in range(N):
                     for m in range(M):
                         for height in range(N):
                             for length in range(M):
-                                square2 = make_square(i, j, N, M, height, length)
-                        if square2 == []:
-                            continue
+                                square2 = make_square(l, m, N, M, height, length)
+                                if square2 == []:
+                                    continue
 
-                        for ci, cj in square2:
-                            if (ci, cj) in square1:
-                                break
-                        else:
-                            res = max(res, get_sum(square1) + get_sum(square2))
+                                for ci, cj in square2:
+                                    if (ci, cj) in square1:
+                                        break
+                                else:
+                                    res = max(res, get_sum(square1) + get_sum(square2))
                 
 
 print(res)
