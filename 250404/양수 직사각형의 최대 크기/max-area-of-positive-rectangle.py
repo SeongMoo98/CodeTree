@@ -9,7 +9,6 @@ matrix = [list(map(int, input().split())) for _ in range(N)]
 
 
 def make_square(ci, cj, height, length):
-
     for h in range(height+1):
         for l in range(length+1):
             ni, nj = ci + h, cj + l
@@ -18,11 +17,13 @@ def make_square(ci, cj, height, length):
                     continue
                 else:
                     return -1, -1
-    return height + 1, length + 1
+    return abs(ci-height) + 1, abs(cj-length) + 1
 
 res = 0
 for i in range(N):
     for j in range(M):
+        if matrix[i][j] <= 0:
+            continue
         for height in range(N):
             for length in range(M):
                 res_h, res_l = make_square(i, j, height, length)
