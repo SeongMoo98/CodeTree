@@ -70,11 +70,14 @@ def move():
     dust_sum = 0
     for i in range(5):
         for j in range(5):
+            if dust_ratio[move_dir][i][j] == 0:
+                continue
             dust = int(matrix[ci][cj] * dust_ratio[move_dir][i][j])
-            add_dust(ci + i -2, cj + j -2 , dust)
+            add_dust(ci + i - 2, cj + j - 2 , dust)
 
             dust_sum += dust
 
+    # a% 위치는 현재 ci, cj에서 이동 방향으로 1칸 이동한 곳
     add_dust(ci + directions[move_dir][0], cj + directions[move_dir][1],
              matrix[ci][cj] - dust_sum)
 
