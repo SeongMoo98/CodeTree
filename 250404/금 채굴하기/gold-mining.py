@@ -40,11 +40,18 @@ def make_diamond(i, j, K):
                 if 0 <= ni < N and 0 <= nj < N and visited[ni][nj] == False:
                     visited[ni][nj] = True
                     diamond.append((ni, nj))
-            
     return diamond
 
 res = 0
-for K in range(2*(N-1), -1, -1):
+gold_count = 0
+for i in range(N):
+    for j in range(N):
+        if matrix[i][j] == 1:
+            gold_count += 1
+if M * glod_count >= (2*(N-1))**2 + (2*(N-1) + 1)**2:
+    res = gold_count
+    
+for K in range(2*(N-1) - 1 , -1, -1):
     for i in range(N):
         for j in range(N):
             glod_count = 0
