@@ -29,4 +29,4 @@ for i in range(N):
                 if res_h != -1 and res_l != -1:
                     res = max(res, res_h*res_l)
 
-print(res)
+print(res if res !=0 else -1)
