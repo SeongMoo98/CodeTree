@@ -13,55 +13,73 @@
 N, M = map(int, input().split())
 matrix = [list(map(int, input().split())) for _ in range(N)]
 
-# 마름모 크기 K
-# ==> 비용은 K^2 + (K+1)^2, 이익은 K * M
-d = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
-from collections import deque
-def make_diamond(i, j, K):
-    diamond = [(i, j)]
-    q = deque()  
-    visited = [[False] * N for _ in range(N)]
+## ***************** 시간 초과 ***************** ##
+# # 마름모 크기 K
+# # ==> 비용은 K^2 + (K+1)^2, 이익은 K * M
+# d = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
-    q.append((i, j))
-    visited[i][j] = True
+# from collections import deque
+# def make_diamond(i, j, K):
+#     diamond = [(i, j)]
+#     q = deque()  
+#     visited = [[False] * N for _ in range(N)]
 
-    for k in range(K):
-        temp = []
-        for dia_i, dia_j in diamond:
-            temp.append((dia_i, dia_j)) 
-        q = deque(temp)
+#     q.append((i, j))
+#     visited[i][j] = True
 
-        while q:
-            ci, cj = q.popleft()
+#     for k in range(K):
+#         temp = []
+#         for dia_i, dia_j in diamond:
+#             temp.append((dia_i, dia_j)) 
+#         q = deque(temp)
 
-            for di, dj in d:
-                ni, nj = ci + di, cj + dj
-                if 0 <= ni < N and 0 <= nj < N and visited[ni][nj] == False:
-                    visited[ni][nj] = True
-                    diamond.append((ni, nj))
-    return diamond
+#         while q:
+#             ci, cj = q.popleft()
 
-res = 0
-gold_count = 0
-for i in range(N):
-    for j in range(N):
-        if matrix[i][j] == 1:
-            gold_count += 1
-if M * gold_count >= (2*(N-1))**2 + (2*(N-1) + 1)**2:
-    res = gold_count
+#             for di, dj in d:
+#                 ni, nj = ci + di, cj + dj
+#                 if 0 <= ni < N and 0 <= nj < N and visited[ni][nj] == False:
+#                     visited[ni][nj] = True
+#                     diamond.append((ni, nj))
+#     return diamond
 
-for K in range(2*(N-1) - 1 , -1, -1):
+# res = 0
+
+# for K in range(2*(N-1), -1, -1):
+#     for i in range(N):
+#         for j in range(N):
+#             glod_count = 0
+#             diamond = make_diamond(i, j, K)
+#             for ci, cj in diamond:
+#                 if matrix[ci][cj] == 1:
+#                     glod_count += 1
+            
+#             if M * glod_count >= K**2 + (K+1)**2:
+#                 res = max(res, glod_count)
+# print(res)
+
+
+# 해설)
+# 마름모의 정의 : 중심점을 기준으로 K번 이내로 인접한 곳 까지 이동하는걸 반복했을 때 갈 수 있는 영역
+#   ==> 중심점 위치 와 특정 위치 간의 맨해튼 거리 <= K
+
+def get_gold_count(ci, cj, k):
+    gold_count = 0
     for i in range(N):
         for j in range(N):
-            glod_count = 0
-            diamond = make_diamond(i, j, K)
-            for ci, cj in diamond:
-                if matrix[ci][cj] == 1:
-                    glod_count += 1
-            
-            if M * glod_count >= K**2 + (K+1)**2:
-                res = max(res, glod_count)
+            if abs(i - ci) + abs(j - cj) <= k:
+                gold_count += 1
+    return gold_count
+
+res = 0
+
+for i in range(N):
+    for j in range(N):
+        for k in range(2*(N-1) + 1):
+            gold_count = get_gold_count(i, j, k)
+
+            if M * gold_count >= k**2 + (k+1)**2:
+                res = max(res, gold_count)
+
 print(res)
-
-
