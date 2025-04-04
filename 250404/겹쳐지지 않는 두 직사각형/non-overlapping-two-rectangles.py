@@ -10,7 +10,7 @@ N, M = map(int, input().split())
 # -1000 <= 정수 값 <= 1000
 matrix = [list(map(int, input().split())) for _ in range(N)]
 
-def make_square(ci, cj, N, M, height, length):
+def make_square(ci, cj, height, length):
     square = []
     for h in range(height+1):
         for l in range(length+1):
@@ -27,17 +27,17 @@ def get_sum(square):
 res = -float('inf')
 for i in range(N):
     for j in range(M):
-        for height in range(N):
-            for length in range(M):
-                square1 = make_square(i, j, N, M, height, length)
+        for height1 in range(N):
+            for length1 in range(M):
+                square1 = make_square(i, j, height1, length1)
                 if square1 == []:
                     continue
 
                 for l in range(N):
                     for m in range(M):
-                        for height in range(N):
-                            for length in range(M):
-                                square2 = make_square(l, m, N, M, height, length)
+                        for height2 in range(N):
+                            for length2 in range(M):
+                                square2 = make_square(l, m, height2, length2)
                                 if square2 == []:
                                     continue
 
