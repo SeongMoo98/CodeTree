@@ -140,8 +140,8 @@ def packman_move():
                     if (ni3, nj3) == (mi, mj) and (mon_num, (mi, mj)) not in eat:
                         eat.append( (mon_num, (mi, mj)) )
                 count = len(eat)
-                if count != 0:
-                    res.append((count, dir1, dir2, dir3, eat))
+                
+                res.append((count, dir1, dir2, dir3, eat))
 
     res.sort(key=lambda x:(-x[0], x[1], x[2], x[3]))                
     count, dir1, dir2, dir3, eat = res[0]
@@ -149,7 +149,7 @@ def packman_move():
     pj = pj + packman_dir[dir1][1] + packman_dir[dir2][1] + packman_dir[dir3][1]
 
     for mon_num, (mi, mj) in eat:
-        dead_monsters[mi][mj].append(2)
+        dead_monsters[mi][mj].append(3)
         monsters.pop(mon_num)
             
 
