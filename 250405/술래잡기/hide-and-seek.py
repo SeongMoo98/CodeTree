@@ -13,10 +13,6 @@
 # 이렇게 도망자 1턴, 술래가 1턴 진행하는 것을 k번 반복
 
 
-
-
-
-
 # 이를 k번에 걸쳐 술래잡기를 진행하는 동아 술래가 총 얻게된 점수 출력
 
 # 격자 크기(홀수), 도망자 수, 나무 수, 턴 수
@@ -155,12 +151,20 @@ def runaway():
                     # 술래 없을 때
                     if (ni, nj) != (si, sj):
                         new_run[ni][nj].append(d)
+                    # 술래가 있으면 움직이지 않는다
+                    else:
+                        new_run[i][j].append(d)
+
                 else:
                     # 격자 밖 -> 방향 반대로
                     d = (d + 2) % 4
                     ni, nj = i + directions[d][0], j + directions[d][1]
                     if (ni, nj) != (si, sj):
                         new_run[ni][nj].append(d)
+                    # 술래가 있다면 움직이지 않는다
+                    else:
+                        new_run[i][j].append(d)
+
     return new_run
 
 
