@@ -58,16 +58,18 @@ def make_team():
         while q:
             ci, cj = q.popleft()
 
-            if board[ci][cj] == 3:
-                return team
-
             for di, dj in [(-1, 0), (0, 1), (1, 0), (0, -1)]:
                 ni, nj = ci + di, cj + dj
                 # 격자 안, 미방문, 중간사람, 꼬리사람
-                if is_range(ni, nj) and (ni, nj) not in visited and (board[ni][nj] == 2 or board[ni][nj] == 3):
-                    q.append((ni, nj))
-                    visited.append((ni, nj))
-                    team.append((ni, nj))
+                if is_range(ni, nj) and (ni, nj) not in visited:
+                    if board[ni][nj] == 2:
+                        q.append((ni, nj))
+                        visited.append((ni, nj))
+                        team.append((ni, nj))
+                        count += 1
+                    if board[ni][nj] == 3 and count >= 2:
+                        team.append((ni, nj))
+                        return team
 
 
     for i in range(N):
@@ -95,13 +97,15 @@ def move():
                     if (i, j) in team:
                         for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                             ni, nj = i + di, j + dj
-                            if is_range(ni, nj) and board[ni][nj] == 4:
+                            # 이동선에 사람이 꽉 차서 머리사람과 꼬리 사람이 이어질 수 있다.
+                            if is_range(ni, nj) and (board[ni][nj] == 4 or board[ni][nj] == 3):
                                 # board와 team 모두 이동
                                 # 나머지 사람들은 앞사람의 좌표따라 이동
                                 # 머리사람 이동
                                 team.appendleft((ni,nj))
                                 ei, ej = team.pop()
                                 new_board[ei][ej] = 4
+                                
                                 for k in range(len(team)):
                                     x, y = team[k]
                                     if k == 0:
@@ -147,6 +151,7 @@ def change(team):
         else:
             board[ci][cj] = 2
     return team
+
 def get_score(bi, bj, d):
     # 3. 공이 던져지는 경우 해당 선에 사람이 있으면 최초에 만나게 되는 사람만이 공을 얻어 점수를 얻음
     #    점수 : 해당 사람이 머리사람을 시작으로 팀 내에서 k번째 사람이라면 k^2만큼 점수
