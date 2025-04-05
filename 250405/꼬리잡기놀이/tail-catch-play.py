@@ -121,10 +121,6 @@ def move():
                                 
     return new_board
 
-
-
-
-
 # 라운드 별 공 던질 위치 확인
 def find_pos(turn):
     mod_k = turn % (4 * N)
@@ -196,7 +192,7 @@ res = 0
 make_team()
 for turn in range(K):
     # 각 팀 이동
-    move()
+    board = move()
 
     # # k 라운드 때 공 던지기
     bi, bj, d = find_pos(turn)
