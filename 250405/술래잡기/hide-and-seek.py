@@ -198,39 +198,39 @@ def catch_run():
     
     # s_dir : 술래가 바라보는 방향
     
-    # 현재 술래 칸
-    temp_si, temp_sj = si, sj
-    cnt = 0
-    if tree[si][sj] == False and tree[si][sj] == False and run[si][sj]:
-        cnt += len(run[si][sj])
-    run[si][sj] = []
-    
-    # 술래가 바라보는 방향 2칸
-    for _ in range(2):
-        temp_si, temp_sj = temp_si + directions[s_dir][0], temp_sj + directions[s_dir][1]
-        # 격자 안, 나무 x, 도망자 있을 때
-        if is_range(temp_si, temp_sj) and tree[temp_si][temp_sj] == False and run[temp_si][temp_sj]:
-            cnt += len(run[temp_si][temp_sj])
-            run[temp_si][temp_sj] = []
-
-    return cnt
-    
-    # # 이걸로 바꾸니 성공
-
+    # # 현재 술래 칸
     # temp_si, temp_sj = si, sj
     # cnt = 0
-
-    # for _ in range(3):
-    #     if not is_range(temp_si, temp_sj):
-    #         break
-
-    #     if not tree[temp_si][temp_sj]:
+    # if tree[si][sj] == False and tree[si][sj] == False and run[si][sj]:
+    #     cnt += len(run[si][sj])
+    # run[si][sj] = []
+    
+    # # 술래가 바라보는 방향 2칸
+    # for _ in range(2):
+    #     temp_si, temp_sj = temp_si + directions[s_dir][0], temp_sj + directions[s_dir][1]
+    #     # 격자 안, 나무 x, 도망자 있을 때
+    #     if is_range(temp_si, temp_sj) and tree[temp_si][temp_sj] == False and run[temp_si][temp_sj]:
     #         cnt += len(run[temp_si][temp_sj])
     #         run[temp_si][temp_sj] = []
-    #     temp_si += directions[s_dir][0]
-    #     temp_sj += directions[s_dir][1]
-    
+
     # return cnt
+    
+    # 이걸로 바꾸니 성공
+
+    temp_si, temp_sj = si, sj
+    cnt = 0
+
+    for _ in range(3):
+        if not is_range(temp_si, temp_sj):
+            break
+
+        if not tree[temp_si][temp_sj]:
+            cnt += len(run[temp_si][temp_sj])
+            run[temp_si][temp_sj] = []
+        temp_si += directions[s_dir][0]
+        temp_sj += directions[s_dir][1]
+    
+    return cnt
     
 
 
