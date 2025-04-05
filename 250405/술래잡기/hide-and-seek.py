@@ -215,22 +215,22 @@ def catch_run():
 
     return cnt
     
-    # 이걸로 바꾸니 성공
+    # # 이걸로 바꾸니 성공
 
-    temp_si, temp_sj = si, sj
-    cnt = 0
+    # temp_si, temp_sj = si, sj
+    # cnt = 0
 
-    for _ in range(3):
-        if not is_range(temp_si, temp_sj):
-            break
+    # for _ in range(3):
+    #     if not is_range(temp_si, temp_sj):
+    #         break
 
-        if not tree[temp_si][temp_sj]:
-            cnt += len(run[temp_si][temp_sj])
-            run[temp_si][temp_sj] = []
-        temp_si += directions[s_dir][0]
-        temp_sj += directions[s_dir][1]
+    #     if not tree[temp_si][temp_sj]:
+    #         cnt += len(run[temp_si][temp_sj])
+    #         run[temp_si][temp_sj] = []
+    #     temp_si += directions[s_dir][0]
+    #     temp_sj += directions[s_dir][1]
     
-    return cnt
+    # return cnt
     
 
 
