@@ -145,22 +145,26 @@ def find_pos(turn):
 
     return bi, bj, d
 
-def change(team):
-    global board
-
+def reverse_team(team):
     team.reverse()
-
-    for i in range(len(team)):
-        ci, cj = team[i]
-        if i == 0:
-            board[ci][cj] = 1
-        elif i == len(team)-1:
-            board[ci][cj] = 3
-        else:
-            board[ci][cj] = 2
     return team
 
-def get_score(bi, bj, d):
+def update_board(team, board):
+    
+    for i in range(len(team)):
+        x, y = team[i]
+        if i == 0:
+            board[x][y] = 1
+        elif i == len(team) - 1:
+            board[x][y] = 3
+        else:
+            board[x][y] = 2
+    return board
+
+    
+
+def get_score(bi, bj, d, board):
+    
     # 3. 공이 던져지는 경우 해당 선에 사람이 있으면 최초에 만나게 되는 사람만이 공을 얻어 점수를 얻음
     #    점수 : 해당 사람이 머리사람을 시작으로 팀 내에서 k번째 사람이라면 k^2만큼 점수
     #    아무도 공을 받지 못하면 점수 x
@@ -171,14 +175,15 @@ def get_score(bi, bj, d):
     while True:
         # 아무도 공을 받지 못함
         if not is_range(bi, bj):
-            return 0
+            return 0, board
         
         if board[bi][bj] == 1 or board[bi][bj] == 2 or board[bi][bj] == 3:
             for i in range(len(teams)):
                 if (bi, bj) in teams[i]:
                     ret = (teams[i].index((bi, bj)) + 1) ** 2
-                    teams[i] = change(teams[i])
-                    return ret
+                    teams[i] = reverse_team(teams[i])
+                    board = update_board(teams[i], board)
+                    return ret, board
             
         bi += di
         bj += dj
@@ -193,6 +198,7 @@ for turn in range(K):
     # # k 라운드 때 공 던지기
     bi, bj, d = find_pos(turn)
     
-    res += get_score(bi, bj, d)
+    ret, board = get_score(bi, bj, d, board)
+    res += ret
 
 print(res)
