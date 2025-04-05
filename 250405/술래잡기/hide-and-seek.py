@@ -117,10 +117,9 @@ def make_mode():
     mode["zero_start"].append(2)
     return mode
 
-
-
 def is_range(i, j):
     return 0 <= i < N and 0 <= j < N
+
 def runaway():
     # 도망 규칙
     # 1. 현재 바라보고 있는 방향으로 1칸(격자 벗어나지 않고)
@@ -132,6 +131,7 @@ def runaway():
     # 도망자가 움직일 때, 현재 술래와의 거리가 3 이하인 도망자만 움직임(거리 : 맨해튼 거리)
 
     new_run = [[] for _ in range(N)]
+
     for i in range(N):
         for j in range(N):
             new_run[i].append([])
@@ -146,17 +146,23 @@ def runaway():
 
                 di, dj = directions[d]
                 ni, nj = i + di, j + dj
-                # 격자 안, 
                 if is_range(ni, nj):
                     # 술래 없을 때
                     if (ni, nj) != (si, sj):
                         new_run[ni][nj].append(d)
+                    # 술래가 있으면 움직이지 않는다
+                    else:
+                        new_run[i][j].append(d)
                 else:
                     # 격자 밖 -> 방향 반대로
                     d = (d + 2) % 4
-                    ni, nj = i + directions[d][0], j + directions[d][1]
-                    if (ni, nj) != (si, sj):
+                    di, dj = directions[d]
+                    ni, nj = i + di, j + dj
+                    if is_range(ni, nj) and (ni, nj) != (si, sj):
                         new_run[ni][nj].append(d)
+                    # 술래가 있다면 움직이지 않는다
+                    else:
+                        new_run[i][j].append(d)
     return new_run
 
 
@@ -195,6 +201,24 @@ def catch_run():
     # 현재 술래 칸
     temp_si, temp_sj = si, sj
     cnt = 0
+    if tree[si][sj] == False and tree[si][sj] == False and run[si][sj]:
+        cnt += len(run[si][sj])
+    run[si][sj] = []
+    
+    # 술래가 바라보는 방향 2칸
+    for _ in range(2):
+        temp_si, temp_sj = temp_si + directions[s_dir][0], temp_sj + directions[s_dir][1]
+        # 격자 안, 나무 x, 도망자 있을 때
+        if is_range(temp_si, temp_sj) and tree[temp_si][temp_sj] == False and run[temp_si][temp_sj]:
+            cnt += len(run[temp_si][temp_sj])
+            run[temp_si][temp_sj] = []
+
+    return cnt
+    
+    # 이걸로 바꾸니 성공
+
+    temp_si, temp_sj = si, sj
+    cnt = 0
 
     for _ in range(3):
         if not is_range(temp_si, temp_sj):
@@ -208,6 +232,9 @@ def catch_run():
     
     return cnt
     
+
+
+
 res = 0
 mode = make_mode()
 
