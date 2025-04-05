@@ -151,21 +151,12 @@ def runaway():
                     # 술래 없을 때
                     if (ni, nj) != (si, sj):
                         new_run[ni][nj].append(d)
-                    # 술래가 있으면 움직이지 않는다
-                    else:
-                        new_run[i][j].append(d)
-
                 else:
                     # 격자 밖 -> 방향 반대로
                     d = (d + 2) % 4
-                    di, dj = directions[d]
-                    ni, nj = i + di, j + dj
-                    if is_range(ni, nj) and (ni, nj) != (si, sj):
+                    ni, nj = i + directions[d][0], j + directions[d][1]
+                    if (ni, nj) != (si, sj):
                         new_run[ni][nj].append(d)
-                    # 술래가 있다면 움직이지 않는다
-                    else:
-                        new_run[i][j].append(d)
-
     return new_run
 
 
@@ -202,22 +193,21 @@ def catch_run():
     # s_dir : 술래가 바라보는 방향
     
     # 현재 술래 칸
-
     temp_si, temp_sj = si, sj
     cnt = 0
-
-    for _ in range(3):
-        if not is_range(temp_si, temp_sj):
-            break
-
-        if not tree[temp_si][temp_sj]:
+    if tree[si][sj] == False and tree[si][sj] == False and run[si][sj]:
+        cnt += len(run[si][sj])
+    run[si][sj] = []
+    
+    # 술래가 바라보는 방향 2칸
+    for _ in range(2):
+        temp_si, temp_sj = temp_si + directions[s_dir][0], temp_sj + directions[s_dir][1]
+        # 격자 안, 나무 x, 도망자 있을 때
+        if is_range(temp_si, temp_sj) and tree[temp_si][temp_sj] == False and run[temp_si][temp_sj]:
             cnt += len(run[temp_si][temp_sj])
             run[temp_si][temp_sj] = []
-        temp_si += directions[s_dir][0]
-        temp_sj += directions[s_dir][1]
-    
+
     return cnt
-    
     
 res = 0
 mode = make_mode()
