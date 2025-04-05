@@ -89,12 +89,14 @@ def move():
         for j in range(N):
             new_board[i][j] = board[i][j]
 
+    moved = set()
     for i in range(N):
         for j in range(N):
             # 머리 사람 이동
             if board[i][j] == 1:
-                for team in teams:
-                    if (i, j) in team:
+                for idx, team in enumerate(teams):
+                    if (i, j) == team[0] and idx not in moved:
+                        moved.add(idx)
                         for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                             ni, nj = i + di, j + dj
                             # 이동선에 사람이 꽉 차서 머리사람과 꼬리 사람이 이어질 수 있다.
@@ -102,6 +104,7 @@ def move():
                                 # board와 team 모두 이동
                                 # 나머지 사람들은 앞사람의 좌표따라 이동
                                 # 머리사람 이동
+                                # 왜냐하면 나머지 사람들은 앞 사람 좌표 그대로 이용
                                 team.appendleft((ni,nj))
                                 ei, ej = team.pop()
                                 new_board[ei][ej] = 4
@@ -115,27 +118,32 @@ def move():
                                     else:
                                         new_board[x][y] = 2
                                 break
-                                # 왜냐하면 나머지 사람들은 앞 사람 좌표 그대로 이용
+                                
     return new_board
 
 # 라운드 별 공 던질 위치 확인
-def find_pos(k):
-    mod_k = k % (4 * N)
+def find_pos(turn):
+    mod_k = turn % (4 * N)
+
     bi, bj, d = -1, -1, -1
+
+    # 상 0, 하 1, 좌 2, 우 3
     if 0 <= mod_k < N:          # 우
         bi, bj, d = mod_k, 0, 3
+
     elif N <= mod_k < 2*N:      # 상
         mod_k -= N
         bi, bj, d = N-1, mod_k, 0
+
     elif 2*N <= mod_k < 3*N:    # 좌   
         mod_k -= 2 * N
         bi, bj, d = N-1 - mod_k, N-1, 2
+
     elif 3*N <= mod_k < 4*N:    # 하
         mod_k -= 3 * N
         bi, bj, d = 0, N-1 - mod_k, 1
 
     return bi, bj, d
-
 
 def change(team):
     global board
@@ -166,24 +174,25 @@ def get_score(bi, bj, d):
             return 0
         
         if board[bi][bj] == 1 or board[bi][bj] == 2 or board[bi][bj] == 3:
-            for team in teams:
-                for i in range(len(team)):
-                    if (bi, bj) == team[i]:
-                        team = change(team)
-                        return i + 1
+            for i in range(len(teams)):
+                if (bi, bj) in teams[i]:
+                    ret = (teams[i].index((bi, bj)) + 1) ** 2
+                    teams[i] = change(teams[i])
+                    return ret
+            
         bi += di
         bj += dj
 
 res = 0
 
 make_team()
-for k in range(K):
+for turn in range(K):
     # 각 팀 이동
     board = move()
 
     # # k 라운드 때 공 던지기
-    bi, bj, d = find_pos(k)
+    bi, bj, d = find_pos(turn)
     
-    res += get_score(bi, bj, d) ** 2
+    res += get_score(bi, bj, d)
 
 print(res)
