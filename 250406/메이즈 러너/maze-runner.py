@@ -98,21 +98,27 @@ def find_square():
 def rotate_people(si, sj, length):
     global people
 
-    temp_matrix = [[0] * length for _ in range(length)]
+    temp_matrix = [[] for _ in range(length)]
+    for i in range(length):
+        for j in range(length):
+            temp_matrix[i].append([])
 
     for num, (ci, cj) in people.items():
         if exited[num]:
             continue
         x, y = ci - si, cj - sj
         if 0 <= x < length and 0 <= y < length:
-            temp_matrix[x][y] = num
+            # 여기서 사람이 Matrix에 여러명이 있을때 한명만 돌아감 
+            # --> 격자 내 회전에 대해 Index로 구현하는 연습이 필요요
+            temp_matrix[x][y].append(num)
 
     temp_matrix = list(map(list, zip(*temp_matrix[::-1])))
 
     for i in range(length):
         for j in range(length):
-            if temp_matrix[i][j] > 0:
-                people[temp_matrix[i][j]] = (si+i, sj+j)
+            if temp_matrix[i][j] != []:
+                for k in range(len(temp_matrix[i][j])):
+                    people[temp_matrix[i][j][k]] = (si+i, sj+j)
 
 def rotate_exit(si, sj, length):
     global ei, ej
