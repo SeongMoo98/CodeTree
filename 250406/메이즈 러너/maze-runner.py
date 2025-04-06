@@ -68,6 +68,7 @@ def move_people():
                         exited[num] = True
                         people[num] = (ni, nj)
                         matrix[ci][cj] = 0
+                        matrix[ni][nj] = -1
                         dist[num] += 1
                     else:
                         people[num] = (ni, nj)
@@ -94,6 +95,7 @@ def find_square():
                             people_flag = True
                         if exit_flag and people_flag:
                             return si, sj, length
+    return -1, -1, 0
 
 
 def rotate_matrix():
@@ -106,6 +108,7 @@ def rotate_matrix():
             ret_matrix[i][j] = matrix[i][j]
 
     si, sj, length = find_square()
+
     
     rotate_matrix = [[0] * length for _ in range(length)]
 
