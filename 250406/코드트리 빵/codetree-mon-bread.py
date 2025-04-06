@@ -26,6 +26,8 @@ conv = [(0, 0)] * M
 success = [False] * M
 basecamp = []
 
+INF = float('inf')
+
 for i in range(N):
     temp = list(map(int, input().split()))
     for j in range(N):
@@ -68,6 +70,7 @@ def people_bfs(si, sj, ei, ej):
             if is_range(ni, nj) and can_go[ni][nj] == True and visited[ni][nj] == (-1, -1):
                 q.append((ni, nj))
                 visited[ni][nj] = (ci, cj)
+    return (sj, sj)
 
 def move_people(t):
     global people
@@ -123,10 +126,9 @@ def conv_bfs(si, sj, ei, ej):
             if is_range(ni, nj) and can_go[ni][nj] == True and visited[ni][nj] == (-1, -1):
                 q.append((ni, nj))
                 visited[ni][nj] = (ci, cj)
- 
-    # # 이동해야하는 최소 칸 수 return
-    # return count
-    pass
+    
+    # 갈 수 있는 경로 x
+    return INF
 
 
 def add_people(t):
