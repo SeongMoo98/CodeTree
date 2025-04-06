@@ -128,6 +128,7 @@ def conv_bfs(si, sj, ei, ej):
     # return count
     pass
 
+
 def add_people(t):
     global conv, basecamp, people, can_go
     # 3. 현재 시간이 t이고 t <= m을 만족한다면, t번 사람은 자신이 가고 싶은 편의점과 가장 가까이 있는 베이스 캠프에 들어간다.
@@ -144,8 +145,9 @@ def add_people(t):
     
     basecamp_res = []
     for si, sj in basecamp:
-        count = conv_bfs(si, sj, ei, ej)
-        basecamp_res.append((count, si, sj))
+        if can_go[si][sj] == True:
+            count = conv_bfs(si, sj, ei, ej)
+            basecamp_res.append((count, si, sj))
     # count 작고, 행 작고, 열 작은
     basecamp_res.sort()
 
@@ -153,7 +155,7 @@ def add_people(t):
     selected_basecamp = basecamp_res[0]
     # 사람 베이스 캠프로 이동
     people[t] = (selected_basecamp[1], selected_basecamp[2])
-    # 해당 칸은 지나갈 수 없게 처리리
+    # 해당 칸은 지나갈 수 없게 처리
     can_go[selected_basecamp[1]][selected_basecamp[2]] = False
 
 
@@ -174,4 +176,4 @@ while True:
         add_people(t)
     t += 1
 
-print(t+2)
+print(t)
