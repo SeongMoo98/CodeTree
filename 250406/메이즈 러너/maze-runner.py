@@ -25,21 +25,20 @@ matrix = [list(map(int, input().split())) for _ in range(N)]
 people = dict()
 exited = dict()
 dist = dict()
-for i in range(2, M+2):
+for i in range(1, M+1):
     x, y = map(lambda x: int(x)-1, input().split())
     # -2, -3, ...이 people, exit의 key
-    people[-i] = (x, y)
-    exited[-i] = False
-    dist[-i] = 0
-
+    people[i] = (x, y)
+    exited[i] = False
+    dist[i] = 0
+    
 # 출구의 좌표
 # 출구는 빈 칸에만 주어지며, 참가자의 좌표와 겹치지 않는다
 ei, ej = map(lambda x:int(x)-1, input().split())
 
-for num, (i, j) in people.items():
-    matrix[i][j] = num
-matrix[ei][ej] = -1
-
+# 이게 아니라 2시간 동안 이제
+# 사람, 출구 회전에 대해 구현
+# 왜냐하면 보드 위에 여러명 존재 가능
 
 def move_people():
     # 1초마다 모든 참가자가 한 칸씩 움직인다.
@@ -58,29 +57,22 @@ def move_people():
         # 상, 하, 좌, 우(왜냐하면 상 하 우선)
         for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
             ni, nj = ci + di, cj + dj
-            # 범위 내, 벽 x, 거리 짧은
-            if 0 <= ni < N and 0 <= nj < N and (matrix[ni][nj] == 0 or matrix[ni][nj] == -1):
+            # 범위 내, 벽 x or 출구
+            if 0 <= ni < N and 0 <= nj < N and (matrix[ni][nj] == 0 or (ni, nj) == (ei, ej)):
                 next_dist = abs(ni - ei) + abs(nj - ej)
                 # 이동거리가 줄었을 때 이동
                 if next_dist < curr_dist:
                     # 출구라면 탈출 처리
-                    if matrix[ni][nj] == -1:
+                    if (ni, nj) == (ei, ej):
                         exited[num] = True
-                        people[num] = (ni, nj)
-                        matrix[ci][cj] = 0
-                        matrix[ni][nj] = -1
-                        dist[num] += 1
-                    else:
-                        people[num] = (ni, nj)
-                        matrix[ni][nj] = num
-                        matrix[ci][cj] = 0
-                        dist[num] += 1
+                    people[num] = (ni, nj)
+                    dist[num] += 1
                     break
                 
 def find_square():
     # 1. 한 명 이상의 참가자와 출구를 포함한 가장 작은 정사각형을 잡는다
     # 2. 가장 작은 크기를 갖는 정사각형이 2개 이상이라면 좌상단 좌표의 i, 그래도 같으면 j가 작은것이 우선
-    global matrix, people, ei, ej
+    global matrix, people, ei, ej, exited
     
     for length in range(1, N+1):
         for si in range(N-length+1):
@@ -89,54 +81,86 @@ def find_square():
                 exit_flag = False
                 for i in range(si, si+length):
                     for j in range(sj, sj+length):
-                        if matrix[i][j] == -1:
+                        # 출구 포함
+                        if (i, j) == (ei, ej):
                             exit_flag = True
-                        if matrix[i][j] < -1:
-                            people_flag = True
+                        # 사람 포함
+                        for num, (ci, cj) in people.items():
+                            if exited[num]:
+                                continue
+                            if (i, j) == (ci, cj):
+                                people_flag = True
+                                break
                         if exit_flag and people_flag:
                             return si, sj, length
     return -1, -1, 0
 
+def rotate_people(si, sj, length):
+    global people
 
-def rotate_matrix():
-    # 3. 선택된 정사각형은 시계방향으로 90도 회전, 회전된 벽은 내구도 1 감소
-    global matrix, ei, ej, people
+    temp_matrix = [[0] * length for _ in range(length)]
 
-    ret_matrix = [[0] * N for _ in range(N)]
-    for i in range(N):
-        for j in range(N):
-            ret_matrix[i][j] = matrix[i][j]
+    for num, (ci, cj) in people.items():
+        if exited[num]:
+            continue
+        x, y = ci - si, cj - sj
+        if 0 <= x < length and 0 <= y < length:
+            temp_matrix[x][y] = num
 
-    si, sj, length = find_square()
+    temp_matrix = list(map(list, zip(*temp_matrix[::-1])))
 
-    
-    rotate_matrix = [[0] * length for _ in range(length)]
+    for i in range(length):
+        for j in range(length):
+            if temp_matrix[i][j] > 0:
+                people[temp_matrix[i][j]] = (si+i, sj+j)
+
+def rotate_exit(si, sj, length):
+    global ei, ej
+    temp_matrix = [[0] * length for _ in range(length)]
+
+    x, y = ei - si, ej - sj
+
+    temp_matrix[x][y] = 1
+    temp_matrix = list(map(list, zip(*temp_matrix[::-1])))
+    done = False
+    for i in range(length):
+        if done:
+            break
+        for j in range(length):
+            if temp_matrix[i][j] == 1:
+                ei, ej = (si + i, sj + j)
+                done = True
+                break
+
+
+def rotate_matrix(si, sj, length):
+    global matrix
+
+    temp_matrix = [[0] * length for _ in range(length)]
 
     for i in range(length):
         for j in range(length):
             # 벽만 내구도 - 1
             if matrix[si+i][sj+j] > 0:
-                rotate_matrix[i][j] = matrix[si+i][sj+j] - 1
-            else:
-                rotate_matrix[i][j] = matrix[si+i][sj+j]
-    # 판 회전(사람, 출구 포함)
-    rotate_matrix = list(map(list, zip(*rotate_matrix[::-1])))
-    
-    for i in range(length):
-        for j in range(length):
-            # 사람
-            if rotate_matrix[i][j] < -1:
-                people[rotate_matrix[i][j]] = (si+i, sj+j)
-            # 출구
-            if rotate_matrix[i][j] == -1:
-                ei, ej = si+i, sj+j
-
+                temp_matrix[i][j] = matrix[si+i][sj+j] - 1
+    # 판 회전
+    temp_matrix = list(map(list, zip(*temp_matrix[::-1])))
 
     for i in range(length):
         for j in range(length):
-            ret_matrix[si+i][sj+j] = rotate_matrix[i][j]
+            matrix[si + i][sj + j] = temp_matrix[i][j]
+         
 
-    return ret_matrix
+def rotate():
+    # 3. 선택된 정사각형은 시계방향으로 90도 회전, 회전된 벽은 내구도 1 감소
+    global matrix, people, ei, ej 
+
+    si, sj, length = find_square()
+
+    if length != 0:
+        rotate_matrix(si, sj, length)
+        rotate_people(si, sj, length)
+        rotate_exit(si, sj, length)
 
 
 res = 0
@@ -147,7 +171,7 @@ for k in range(K):
 
     move_people()
 
-    matrix = rotate_matrix()
+    rotate()
 
 print(sum(list(dist.values())))
 print(ei+1, ej+1)
