@@ -5,7 +5,6 @@
 하지만 132222 이렇게 팀이 구해졌다(12223 순)
 ==> 탐색을 할 때 BFS만 하는 것이 아니라 BFS, DFS, Exhaustive search도 생각해야한다
 '''
-from h5py.h5o import visit
 
 '''
 문제 조건)
