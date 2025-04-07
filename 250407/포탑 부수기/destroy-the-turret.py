@@ -59,7 +59,6 @@ for i in range(N):
 # 가장 최근에 공격한 turn 기록
 attacked = [[0] * M for _ in range(N)]
 
-
 def find_attacker(matrix, attacked):
     # 가장 약한 -> (가장 최근에 공격, i + j 큰, j 큰)
     min_value = float('inf')
@@ -117,6 +116,7 @@ def find_path(si, sj, ei, ej):
     global matrix
     # (si, sj) -> (ei, ej)
     # 우, 하, 좌, 상 순 최단 거리 찾기 
+    # 아래로 바로 가면 되는데 아닌데?
 
     q = deque([(si, sj)])
     # 이전에 온 위치를 기록한 visited
