@@ -51,7 +51,7 @@ matrix = [list(map(int, input().split())) for _ in range(N)]
 
 alive = 0
 for i in range(N):
-    for j in range(N):
+    for j in range(M):
         if matrix[i][j] > 0:
             alive += 1
 
