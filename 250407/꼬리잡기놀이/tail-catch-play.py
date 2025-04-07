@@ -34,6 +34,7 @@ arr = [list(map(int, input().split())) for _ in range(N)]
 # 이동선이 4이므로 5부터 팀번호를 부여
 teams = dict()
 team_num = 5
+v = [[0] * N for _ in range(N)]
 
 from collections import deque
 def bfs(si, sj, team_num):
@@ -58,7 +59,7 @@ def bfs(si, sj, team_num):
     teams[team_num] = team
 
 # [1] 팀 구성하기
-v = [[0] * N for _ in range(N)]
+
 for i in range(N):
     for j in range(N):
         # 머리 위치
