@@ -60,7 +60,7 @@ for i in range(N):
 attacked = [[0] * M for _ in range(N)]
 
 
-def find_attacker(matrix, attacked):    
+def find_attacker(matrix, attacked):
     # 가장 약한 -> (가장 최근에 공격, i + j 큰, j 큰)
     min_value = float('inf')
     mi, mj = -1, -1
@@ -86,13 +86,14 @@ def find_attacker(matrix, attacked):
                             mi, mj = i, j
     return mi, mj
 
+
 def find_target(matrix, attacked):
-    # 가장 약한 -> (가장 최근에 공격, i + j 큰, j 큰)
+    # 가장 강한 -> (가장 오래전 공격, i + j 작은, j 작은)
     max_value = 0
     mi, mj = -1, -1
     for i in range(N):
         for j in range(M):
-            if matrix[i][j] == 0:
+            if matrix[i][j] == 0 or (i, j) == (si, sj):
                 continue
             if max_value < matrix[i][j]:
                 max_value = matrix[i][j]
@@ -126,7 +127,7 @@ def find_path(si, sj, ei, ej):
     path = []
     while q:
         ci, cj = q.popleft()
-        
+
         # 도착
         if (ci, cj) == (ei, ej):
             path.append((ei, ej))
@@ -151,20 +152,21 @@ def find_path(si, sj, ei, ej):
     # if문을 못만났으면 []
     return path
 
-for turn in range(1, K+1):
+
+for turn in range(1, K + 1):
     # 공격에 참여했는지 안했는지 기록
     engaged = [[False] * M for _ in range(N)]
 
     # [1] 가장 약한 포탑 선정
     si, sj = find_attacker(matrix, attacked)
-    
-    matrix[si][sj] += (N + M)   # 공격력 증가
-    attacked[si][sj] = turn     # 현재 공격 턴 기록
-    engaged[si][sj] = True      # 공격 참여 기록
-    attack_val = matrix[si][sj] # 공격력
+
+    matrix[si][sj] += (N + M)  # 공격력 증가
+    attacked[si][sj] = turn  # 현재 공격 턴 기록
+    engaged[si][sj] = True  # 공격 참여 기록
+    attack_val = matrix[si][sj]  # 공격력
 
     # [2] 공격 대상 선정
-    ei, ej = find_target(matrix, attacked)
+    ei, ej = find_target(matrix, attacked, si, sj)
 
     # [3] 경로 찾기
     path = find_path(si, sj, ei, ej)
@@ -179,12 +181,12 @@ for turn in range(1, K+1):
         if matrix[ei][ej] <= 0:
             alive -= 1
         engaged[ei][ej] = True
-        
+
         # 경로 내 포탑
         for ci, cj in path:
-            if (ci, cj) == (si ,sj) or (ci, cj) == (ei, ej):
+            if (ci, cj) == (si, sj) or (ci, cj) == (ei, ej):
                 continue
-            
+
             if matrix[ci][cj] > 0:
                 matrix[ci][cj] -= attack_val // 2
                 # 포탑 부서짐
@@ -194,7 +196,7 @@ for turn in range(1, K+1):
     else:
         # [5] 포탄 공격
         # 상, 우상, 우, 우하, 하, 좌하, 좌, 좌상
-         # 공격 대상 공격
+        # 공격 대상 공격
         matrix[ei][ej] -= attack_val
         if matrix[ei][ej] <= 0:
             alive -= 1
@@ -204,13 +206,13 @@ for turn in range(1, K+1):
         for di, dj in [(-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1)]:
             ni, nj = (ei + di) % N, (ej + dj) % M
             # 공격자 x, 주변 8개는 //2
-            if (ni, nj) != (si, sj) and matrix[ni][nj] > 0:                
-                    matrix[ni][nj] -= attack_val // 2
-                    # 포탑 부서짐
-                    if matrix[ni][nj] <= 0:
-                        alive -= 1
-                    engaged[ni][nj] = True
-           
+            if (ni, nj) != (si, sj) and matrix[ni][nj] > 0:
+                matrix[ni][nj] -= attack_val // 2
+                # 포탑 부서짐
+                if matrix[ni][nj] <= 0:
+                    alive -= 1
+                engaged[ni][nj] = True
+
     for i in range(N):
         for j in range(M):
             # [5] 포탑 부서짐
@@ -220,12 +222,9 @@ for turn in range(1, K+1):
             if matrix[i][j] > 0 and engaged[i][j] == False:
                 matrix[i][j] += 1
 
-
     # 남은 포탑이 1개이면 종료
     if alive == 1:
         break
-
-
 
 # 가장 강한 포탑의 공격력 출력
 res = 0
@@ -234,4 +233,4 @@ for i in range(N):
         if matrix[i][j] != 0:
             res = max(res, matrix[i][j])
 print(res)
-    
+
