@@ -64,6 +64,8 @@ def move_knight(knight_num, d):
     temp_matrix = [[0] * L for _ in range(L)]
     # 임시 Matrix에 기사 번호 기록
     for num, pos_list in knight_pos.items():
+        if alive[num] == False:
+            continue
         for ci, cj in pos_list:
             temp_matrix[ci][cj] = num
 
@@ -94,6 +96,7 @@ for _ in range(Q):
     # i(1 ~ N)번째 기사에서 방향 d를 준다(이미 사라진 기사의 번호를 줄 수도 있다.)
     Q_num, Q_d = map(int, input().split())
 
+    # 이미 죽은 기사는 Pass
     if alive[Q_num] == False:
         continue
 
@@ -106,13 +109,14 @@ for _ in range(Q):
     if fight_list:  # 움직이는 기사 번호들
         di, dj = directions[Q_d]
         for knight_num in fight_list:
+            if alive[knight_num] == False:
+                continue
             for i in range(len(knight_pos[knight_num])):
                 ci, cj = knight_pos[knight_num][i]
                 knight_pos[knight_num][i] = (ci + di, cj + dj)
 
     # [3] 데미지 처리
     # 밀려난 곳에서 직사각형 내의 함정 개수만큼 피해
-
     if fight_list:
         for knight_num in fight_list:
             # 명령받은 기사는 제외, 죽은 기사도 제외
