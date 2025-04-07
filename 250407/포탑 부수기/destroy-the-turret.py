@@ -87,7 +87,7 @@ def find_attacker(matrix, attacked):
     return mi, mj
 
 
-def find_target(matrix, attacked):
+def find_target(matrix, attacked, si, sj):
     # 가장 강한 -> (가장 오래전 공격, i + j 작은, j 작은)
     max_value = 0
     mi, mj = -1, -1
