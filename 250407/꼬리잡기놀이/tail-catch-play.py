@@ -106,7 +106,7 @@ for k in range(K):
             # 특정 팀 찾음
             team_n = arr[ci][cj]
             # 머리에서부터 (ci, cj)의 index + 1번째를 찾음
-            ans += (teams[team_n].index(ci, cj)+1) ** 2
+            ans += (teams[team_n].index((ci, cj))+1) ** 2
             teams[team_n] = teams[team_n][::-1]
             break
         ci, cj = ci + d[dr][0],cj +d[dr][1]
