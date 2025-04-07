@@ -94,6 +94,9 @@ for _ in range(Q):
     # i(1 ~ N)번째 기사에서 방향 d를 준다(이미 사라진 기사의 번호를 줄 수도 있다.)
     Q_num, Q_d = map(int, input().split())
 
+    if alive[Q_num] == False:
+        continue
+
     # # [1] 명령받은 기사 이동(어떤 기사들이 이동하는지 확인)
     fight_list = move_knight(Q_num, Q_d)
 
