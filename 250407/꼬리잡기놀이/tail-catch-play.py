@@ -53,6 +53,7 @@ def bfs(si, sj, team_num):
                 if arr[ni][nj] == 2 or ((ci, cj) != (si, sj) and arr[ni][nj] == 3):
                     q.append((ni, nj))
                     v[ni][nj] = 1
+                    team.append((ni, nj))
                     arr[ni][nj] = team_num
 
     teams[team_num] = team
