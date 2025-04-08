@@ -48,7 +48,6 @@ d : 우 0, 좌 1, 하 1, 상 3
 v : 확산 상수(1 <= v <= 1000)
 '''
 from collections import deque
-from filecmp import dircmp
 
 # 미지의 공간 크기, 시간의 벽 크기, 시간 이상 현상 개수
 N, M, F = map(int, input().split())
@@ -126,10 +125,11 @@ def find_exit():
                     ni, nj = i + di, j + dj
                     if 0 <= ni < N and 0 <= nj < N and space_matrix[ni][nj] == 0:
                         exit_i, exit_j = ni, nj
-                        return ei, ej, wi, wj, exit_i, exit_j
 
-    # 시간 이상 현상이 출구를 막아버림
-    return -1, -1, -1, -1, -1, -1
+    if -1 in [ei, ej, wi, wj, exit_i, exit_j]:
+        return -1, -1, -1, -1, -1, -1
+    return ei, ej, wi, wj, exit_i, exit_j
+
 
 def find_time_machine():
     # 타임머신 좌표 찾기
@@ -219,6 +219,7 @@ def exit_time_wall(wi, wj, exit_i, exit_j):
                 path = [(ci, cj)]
                 while True:
                     if (ci, cj) == (si, sj):
+                        path = path[::-1]
                         return len(path)
                     ni, nj = visited[ci][cj]
                     path.append((ni, nj))
