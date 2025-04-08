@@ -43,8 +43,6 @@
 '''
 from collections import deque
 
-from h5py.h5o import visit
-
 # 격자 크기, 회전 격자 크기
 N, L = 5, 3
 
