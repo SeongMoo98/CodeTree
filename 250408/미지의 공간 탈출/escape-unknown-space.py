@@ -48,6 +48,8 @@ d : 우 0, 좌 1, 하 1, 상 3
 v : 확산 상수(1 <= v <= 1000)
 '''
 from collections import deque
+from filecmp import dircmp
+
 # 미지의 공간 크기, 시간의 벽 크기, 시간 이상 현상 개수
 N, M, F = map(int, input().split())
 
@@ -146,32 +148,34 @@ def exit_time_wall(wi, wj, exit_i, exit_j):
 
     def is_range(x, y):
         return 0 <= x < 3 * M and 0 <= y < 3 * M
-    
-    def move_to_wall(ni, nj):
+    # 동 0, 서 1, 남 2, 북 3
+    def move_to_wall(ni, nj, d):
         # 북 - >서
-        if 0 <= ni < M and nj == M - 1:
+        if 0 <= ni < M and nj == M - 1 and d == 1:
             ni, nj = M, ni
         # 서 -> 북
-        elif ni == M - 1 and 0 <= nj < M:
+        elif ni == M - 1 and 0 <= nj < M and d == 2:
             ni, nj = nj, M
 
         # 북 -> 동
-        elif 0 <= ni < M and nj == 2 * M:
-            ni, nj = M, 3 * M - ni
+        elif 0 <= ni < M and nj == 2 * M and d == 0:
+            ni, nj = M, 3 * M - 1 - ni
         # 동 -> 북
-        elif ni == M - 1 and 2 * M <= nj < 3 * M:
-            ni, nj = 3 * M - nj, 2 * M - 1
+        elif ni == M - 1 and 2 * M <= nj < 3 * M and d == 3:
+            ni, nj = 3 * M - 1 - nj, 2 * M - 1
+
         # 서 -> 남
-        elif ni == 2 * M and 0 <= nj < M:
-            ni, nj = 3 * M - nj, M
+        elif ni == 2 * M and 0 <= nj < M and d == 2:
+            ni, nj = 3 * M - 1 - nj, M
         # 남 -> 서
-        elif 2 * M <= ni < 3 * M and nj == M - 1:
-            ni, nj = 2 * M - 1, 3 * M - ni
+        elif 2 * M <= ni < 3 * M and nj == M - 1 and d == 1:
+            ni, nj = 2 * M - 1, 3 * M - 1 - ni
+
         # 남 -> 동
-        elif 2 * M <= ni < 3 * M and nj == 2 * M:
+        elif 2 * M <= ni < 3 * M and nj == 2 * M and d == 0:
             ni, nj = 2 * M - 1, ni
         # 동 -> 남
-        elif ni == 2 * M and 2 * M <= nj < 3 * M:
+        elif ni == 2 * M and 2 * M <= nj < 3 * M and d == 2:
             ni, nj = nj, 2 * M - 1
             
         return ni, nj
@@ -199,11 +203,11 @@ def exit_time_wall(wi, wj, exit_i, exit_j):
     path = []
     while q:
         ci, cj = q.popleft()
-        for di, dj in directions:
-            ni, nj = ci + di, cj + dj
+        for d in range(4):
+            ni, nj = ci + directions[d][0], cj + directions[d][1]
             
             # 벽면 이동 가능하면 이동
-            ni, nj = move_to_wall(ni, nj)
+            ni, nj = move_to_wall(ni, nj, d)
 
             # 격자 내 빈칸이면 그냥 갈 수 있다.
             if is_range(ni, nj) and visited[ni][nj] == (0, 0) and timewall_matrix[ni][nj] == 0:
@@ -282,7 +286,7 @@ else:
             curr_time += 1
 
         if flag:
-            print(curr_time+1)
+            print(curr_time)
         else:
             print(-1)
 
