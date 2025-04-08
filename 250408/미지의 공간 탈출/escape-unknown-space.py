@@ -60,7 +60,7 @@ space_matrix = [list(map(int, input().split())) for _ in range(N)]
 #   W U E
 #   x S x
 # 동, 서, 남, 북, 윗면의 단면도
-# 전부 벽 
+# 전부 벽
 timewall_matrix = [[1] * (3 * M) for _ in range(3 * M)]
 
 directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
@@ -177,7 +177,7 @@ def exit_time_wall(wi, wj, exit_i, exit_j):
         # 동 -> 남
         elif ni == 2 * M and 2 * M <= nj < 3 * M and d == 2:
             ni, nj = nj, 2 * M - 1
-            
+
         return ni, nj
 
     si, sj = find_time_machine()
@@ -205,7 +205,7 @@ def exit_time_wall(wi, wj, exit_i, exit_j):
         ci, cj = q.popleft()
         for d in range(4):
             ni, nj = ci + directions[d][0], cj + directions[d][1]
-            
+
             # 벽면 이동 가능하면 이동
             ni, nj = move_to_wall(ni, nj, d)
 
@@ -259,13 +259,20 @@ else:
         # [1] 시간의 벽 출구 -> 탈출구 한칸 이동(최단거리 찾고) -> 확산을 계속 반복
         # (exit_i, exit_j) => (ei, ej)로 가는 최단 거리
         q = deque()
-        visited = [[False] * N for _ in range(N)]
+        visited = [[(0, 0)] * N for _ in range(N)]
 
         q.append((exit_i, exit_j))
-        visited[exit_i][exit_j] = True
+        visited[exit_i][exit_j] = (exit_i, exit_j)
         flag = False
 
         while q:
+            if flag == False:
+                # 시간 이상 현상이 확산된 직후 타임머신 이동
+                curr_time += 1
+                spread(curr_time)
+            else:
+                break
+
             nq = deque()
 
             # 동일 반경(즉, 같은 시간내에서 갈 수 있는 곳)
@@ -276,22 +283,19 @@ else:
 
                 for di, dj in directions:
                     ni, nj = ci + di, cj + dj
-                    if 0 <= ni < N and 0 <= nj < N and visited[ni][nj] == False and (space_matrix[ni][nj] == 0 or space_matrix[ni][nj] == 4):
+                    if 0 <= ni < N and 0 <= nj < N and visited[ni][nj] == (0, 0) and (space_matrix[ni][nj] == 0 or space_matrix[ni][nj] == 4):
                         nq.append((ni, nj))
-                        visited[ni][nj] = True
+                        visited[ni][nj] = (ci, cj)
             q = nq
 
-            # 시간 이상
-            spread(curr_time)
-            curr_time += 1
 
         if flag:
-            print(curr_time)
+            print(curr_time-1)
         else:
             print(-1)
 
 
-        
+
 
 
 
