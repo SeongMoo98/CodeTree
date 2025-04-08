@@ -77,15 +77,14 @@ def bfs(si, sj, matrix, visited):
 
     return path
 
-def rotate(si, sj, turn):
+def rotate(si, sj, matrix):
     # si, sj는 좌상단 좌표
-    ret_arr = [x[:] for x in arr]
+    ret_mat = [x[:] for x in arr]
 
-    for t in range(turn):
-        for i in range(L):
-            for j in range(L):
-                ret_arr[si + i][sj + j] = arr[si + L - 1 - j][sj + i]
-    return ret_arr
+    for i in range(L):
+        for j in range(L):
+            ret_mat[si + i][sj + j] = matrix[si + L - 1 - j][sj + i]
+    return ret_mat
 
 
 def search(matrix):
@@ -122,14 +121,15 @@ for k in range(K):
     for si in range(N - L + 1):
         for sj in range(N - L + 1):
             # 1번(90도), 2번(180도), 3번(270도) 회전
+            temp_matrix = [x[:] for x in arr]
             for turn in range(1, 4):
-                temp_matrix = rotate(si, sj, turn)
+                temp_matrix = rotate(si, sj, temp_matrix)
                 temp_cnt, _ = search(temp_matrix)
                 # 개수, 회전 횟수, 중심 j, 중심 i
                 temp_list.append((temp_cnt, turn, sj + 1, si + 1))
     # 유물 1차 획득이 많은, 회전 각도 작은, 중심 좌표의 열 j -> 행 i 이 작은
     temp_list.sort(key=lambda x: (-x[0], x[1], x[2], x[3]))
-    cnt, angle, center_i, center_j = temp_list[0][0], temp_list[0][1], temp_list[0][3], temp_list[0][2]
+    cnt, turn, center_i, center_j = temp_list[0][0], temp_list[0][1], temp_list[0][3], temp_list[0][2]
 
     # 획득할 방법이 없을 때 종료
     if cnt == 0:
@@ -138,7 +138,8 @@ for k in range(K):
     # [2] 회전
     # 중심좌표를 기준으로 center_i, center_j = (si + 1, sj +1)
     # [1]번의 기준에 맞게 arr 회전
-    arr = rotate(center_i - 1, center_j - 1, angle)
+    for t in range(turn):
+        arr = rotate(center_i - 1, center_j - 1, arr)
 
     # [3] 유물 획득
     # 유물 획득 -> 유물 채우기 과정을 계속 반복
