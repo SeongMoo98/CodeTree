@@ -126,9 +126,8 @@ def find_exit():
                         exit_i, exit_j = ni, nj
                         return ei, ej, wi, wj, exit_i, exit_j
 
-# 탈출구,시간의 벽 좌상단, 시간의 벽 출구 찾기
-ei, ej, wi, wj, exit_i, exit_j = find_exit()
-
+    # 시간 이상 현상이 출구를 막아버림
+    return -1, -1, -1, -1, -1, -1
 
 def find_time_machine():
     # 타임머신 좌표 찾기
@@ -237,51 +236,55 @@ def spread(time):
                 temp_ab.append((nr, nc, d, v))
     abnormal = temp_ab
 
-
-curr_time = exit_time_wall(wi, wj, exit_i, exit_j)
-
-
-if curr_time == 0:
+# 탈출구,시간의 벽 좌상단, 시간의 벽 출구 찾기
+ei, ej, wi, wj, exit_i, exit_j = find_exit()
+if (ei, ej) == (-1, -1):
     print(-1)
 else:
-    # 현재 t 시간이 지난 상황이기 때문에 확산을 다 시켜놓기
-    for t in range(1, curr_time+1):
-        spread(t)
-    # curr_time += 1
+    curr_time = exit_time_wall(wi, wj, exit_i, exit_j)
 
-    # [1] 시간의 벽 출구 -> 탈출구 한칸 이동(최단거리 찾고) -> 확산을 계속 반복
-    # (exit_i, exit_j) => (ei, ej)로 가는 최단 거리
-    q = deque()
-    visited = [[False] * N for _ in range(N)]
 
-    q.append((exit_i, exit_j))
-    visited[exit_i][exit_j] = True
-    flag = False
-
-    while q:
-        nq = deque()
-
-        # 동일 반경(즉, 같은 시간내에서 갈 수 있는 곳)
-        for ci, cj in q:
-            if (ci, cj) == (ei, ej):
-                flag = True
-                break  
-
-            for di, dj in directions:
-                ni, nj = ci + di, cj + dj
-                if 0 <= ni < N and 0 <= nj < N and visited[ni][nj] == False and (space_matrix[ni][nj] == 0 or space_matrix[ni][nj] == 4):
-                    nq.append((ni, nj))
-                    visited[ni][nj] = True
-        q = nq
-
-        # 시간 이상
-        spread(curr_time)
-        curr_time += 1
-    
-    if flag:
-        print(curr_time+1)
-    else:
+    if curr_time == 0:
         print(-1)
+    else:
+        # 현재 t 시간이 지난 상황이기 때문에 확산을 다 시켜놓기
+        for t in range(1, curr_time+1):
+            spread(t)
+        # curr_time += 1
+
+        # [1] 시간의 벽 출구 -> 탈출구 한칸 이동(최단거리 찾고) -> 확산을 계속 반복
+        # (exit_i, exit_j) => (ei, ej)로 가는 최단 거리
+        q = deque()
+        visited = [[False] * N for _ in range(N)]
+
+        q.append((exit_i, exit_j))
+        visited[exit_i][exit_j] = True
+        flag = False
+
+        while q:
+            nq = deque()
+
+            # 동일 반경(즉, 같은 시간내에서 갈 수 있는 곳)
+            for ci, cj in q:
+                if (ci, cj) == (ei, ej):
+                    flag = True
+                    break
+
+                for di, dj in directions:
+                    ni, nj = ci + di, cj + dj
+                    if 0 <= ni < N and 0 <= nj < N and visited[ni][nj] == False and (space_matrix[ni][nj] == 0 or space_matrix[ni][nj] == 4):
+                        nq.append((ni, nj))
+                        visited[ni][nj] = True
+            q = nq
+
+            # 시간 이상
+            spread(curr_time)
+            curr_time += 1
+
+        if flag:
+            print(curr_time+1)
+        else:
+            print(-1)
 
 
         
