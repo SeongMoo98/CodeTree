@@ -1,285 +1,228 @@
 '''
-메두사와 전사들
-
-N x N 격자 (도로 0, 비도로 1)
-
-메두사 : 집(S_r, S-c) -> 공원(E_r, E-c) 최단 경로, 항상 도로 위, 둘 좌표는 다름
-M명의 전사 : 초기 (r_i, c_i) -> 메두사 최단경로, 도로, 비도로 가리지 않음, 초기 전사들의 위치는 메두사의 집 x
-최단거리 : 맨해튼 거리
-메두사는 전사들이 "움직이기 전"에 돌로 만듬
-
-
-[1] 메두사의 이동
-    공원까지 도로를 따라 최단거리(전사가 있을 경우 전사 사라짐)
-    상, 하, 좌, 우 우선순위
-    집 -> 공원 경로 "없을 수도 있다"
-
-[2] 메두사의 시선
-    상, 하, 좌, 우 중 한 곳 바라봄
-    90도의 시야각, 전사를 바라봄
-    시야각에 들어왔지만 다른 전사에 가려진 경우 보이지 않는다
-    메두사에게 가려지는 범위
-        메두사로부터 8방향중 한 방향에 전사가 위치해 있다면, 그 전사가 동일한 방향으로 바라본 범위에
-        포함된 모든 칸에는 메두사가 보이지 않는다
-    메두사가 본 전사들은 해당 턴에 움직일 수 없고, 이번 턴이 종료되면 해제(둘 이상 있으면 둘다)
-
-    메두사의 시선 방향
-        (1) 전사를 가장 많이 볼 수 있는 (2) 상, 하, 좌, 우 우선순위
-
-[3] 전사들의 이동
-    돌로 변하지 않은 전사들은 메두사를 향해 최대 2칸 이동(같은 칸에 2명 이상 가능)
-    (1) 첫번째 이동
-        메두사와 거리를 줄일 수 있는 방향(상, 하, 좌, 우 우선)
-        격자 밖 x, 메두사의 시야에는 안됨
-
-    (2) 두번째 이동
-        메두사와 거리를 줄일 수 있는 방향(좌, 우, 하, 상 우선)
-        격자 밖 x, 메두사의 시야는 안됨
-
-[4] 전사의 공격
-    메두사와 같은 칸이면 메두사를 공격하지만 이기지 못하고 "사라짐"
-
-위의 4단계를 반복하여 메두사가 공원에 도달할 때까지
-매 턴마다 해당 턴에서 모든 전사가 이동한 거리의 합, 돌로 변한 전사의 수, 메두사를 공격한 전사의 수를 출력
-메두사가 공원에 도착하는 턴에는 0을 출력하고 종료
-만약 메두사 -> 공원 경로가 없다면 -1 출력(처음)
-
-마을의 크기 N, 전사의 수 M
-0 <= N <= 50, 0 <= M <= 300
+"또한, Matrix 한 칸에 여러명이 존재할 수 있다" : Matrix 안에 List 또는 숫자로 표시하는 걸 생각해라
+    dict로 풀다가 애매해졌네
+전사 이동에서 Matrix에 적용이 제대로 되지 못했다
 '''
+
+'''
+문제 조건)
+1. 메두사의 이동
+    도로를 따라 최단거리(상하좌우)
+    인접한 칸에 전사 있으면, 전사 사라짐
+2. 메두사의 시선
+    가장 많이 돌로 만드는 방향(상하좌우)
+    8방향 중 한 방향에 전사가 위치하면, 그 전사가 동일한 방향으로 바라본 범위의 칸은 안보임
+3. 전사들의 이동
+    메두사 쪽으로 최단거리 이동
+    첫번째 이동 : 상하좌우
+    두번째 이동 : 좌우상하
+4. 전사의 공격   
+    공격 후 사라짐
+
+입력
+4 <= N <= 50 , 0 <= M <= 300
+
+출력
+이동 합, 돌이됭 수, 공격 수
+'''
+
+'''
+풀이 Idea)
+[1] 메두사의 이동
+    한번만 BFS 처리 -> 경로 없으면 -1
+    BFS 이동 경로 처리(상하좌우)
+[2] 메두사의 시선
+'''
+
 from collections import deque
-
-
-N, M = map(int, input().split())
-# 메두사의 집, 공원
-si, sj, ei, ej = map(int, input().split())
-
-# (i, j)에 있는 전사의 수
-warriors = [[0] * N for _ in range(N)]
-# 해당 턴에 돌인지
-stone = [[False] * N for _ in range(N)]
-
-
-temp = list(map(int ,input().split()))
-for i in range(0, len(temp), 2):
-    x, y = temp[i], temp[i+1]
-    warriors[x][y] += 1
-
-arr = [list(map(int, input().split())) for _ in range(N)]
-
-def is_range(x, y):
-    return 0 <= x < N and 0 <= y < N
-
-def find_block_direction(si, sj, wi, wj, curr_d):
-    if curr_d == 0:     # 상
-        if cj > wj: wd = [(-1, -1), (-1, 0)]  # 좌상, 상
-        elif cj == wj: wd = [(-1, 0)]          # 상
-        elif cj < wj: wd = [(-1, 0), (-1, 1)] # 상, 우상
-    elif curr_d == 1:   # 하
-        if cj > wj: wd = [(1, -1), (1, 0)]    # 좌하 ,하
-        elif cj == wj: wd = [(1, 0)]          # 하
-        elif cj < wj: wd = [(1, 0), (1, 1)]   # 하, 우하
-
-    elif curr_d == 2:   # 좌
-        if ci > wi: wd = [(-1, -1), (0, -1)]  # 좌상, 좌
-        elif ci == wi: wd = [(0, -1)]         # 좌
-        elif ci < wi: wd = [(0, -1), (1, -1)] # 좌, 좌하
-
-    elif curr_d == 3:    # 우
-        if ci > wi: wd = [(-1, 1), (0, 1)]    # 우상, 우
-        elif ci == wi: wd = [(0, 1)]          # 우
-        elif ci < wi: wd = [(0, 1), (1, 1)]   # 우하, 우
-    return wd
-
-
-def look(si, sj):
-    # 메두사의 현재 위치를 시작으로 blocked를 처리
-
-    # 상, 하, 좌, 우 4번 돌고 (count, dir) 정렬
-    # 그떄의 blocked return
-
-    # 상(0): 좌상, 상, 우상
-    # 하(1): 좌하, 하, 우하
-    # 좌(2): 좌상, 좌, 좌하
-    # 우(3): 우상, 우, 우하
-    directions = {
-        0: [(-1, -1), (-1, 0), (-1, 1)],
-        1: [(1, -1), (1, 0), (1, 1)],
-        2: [(-1, -1), (0, -1), (1, -1)],
-        3: [(-1, 1), (0, 1), (1, 1)]
-    }
-    # 4방향에 대하 메두사의 시선
-    temp_lst = []
-    for curr_d in range(4):
-        q = deque()
-        visited = [[False] * N for _ in range(N)]
-
-        # 메두사 시야 밖 처리도 해야함 !
-        # 애초에 시야 밖에 있는 좌표
-        blocked = [[True] * N for _ in range(N)]
-
-        q.append((si, sj))
-        visited[si][sj] = True
-
-        while q:
-            ci, cj = q.popleft()
-
-            # 현재 기준 3방향 이동
-            for di, dj in directions[curr_d]:
-                ni, nj = ci + di, cj + dj
-                # 세방향, 미방문, 가려지지 않은 곳
-                if is_range(ni, nj) and visited[ni][nj] == False:
-                    q.append((ni, nj))
-                    visited[ni][nj] = True
-                    blocked[ni][nj] = False
-
-        cnt = 0
-        '''
-        앞에 있는 게 먼저 되는게 아니라 뒤에 있는게 먼저 시작해버리네;;        
-        '''
-        for wsi in range(N):
-            for wsj in range(N):
-                if warriors[wsi][wsj] > 0 and blocked[wsi][wsj] == False:
-
-                    nq = deque()
-                    n_visited = [[False] * N for _ in range(N)]
-
-                    nq.append((wsi, wsj))
-                    n_visited[wsi][wsj] = True
-                    while nq:
-                        wci, wcj = nq.popleft()
-                        # 현재 메두사의 위치, 현재 전사의 위치, 현재 메두사 시야 방향으로 방향 결정
-                        wd = find_block_direction(si, sj, wsi, wsj, curr_d)
-
-                        for wdi, wdj in wd:
-                            wni, wnj = wci + wdi, wcj + wdj
-                            # 범위내, 미방문 -> blocked 처리
-                            if is_range(wni, wnj) and n_visited[wni][wnj] == False:
-                                nq.append((wni, wnj))
-                                n_visited[wni][wnj] = True
-                                blocked[wni][wnj] = True
-
-        for wi in range(N):
-            for wj in range(N):
-                # 전사 있고, block 되지 못한곳
-                if warriors[wi][wj] > 0 and blocked[wi][wj] == False:
-                    cnt += warriors[wi][wj]
-        temp_lst.append((cnt, curr_d, blocked))
-    # 돌로 만든 전사의 수 많은, 상 하 좌 우 순
-    temp_lst.sort(key=lambda x: (-x[0], x[1]))
-
-    ret_cnt, ret_dir, ret_blocked = temp_lst[0]
-
-    return ret_cnt, ret_dir, ret_blocked
-
-
-
-def find_path(si, sj, ei, ej):
+def find_route(si, sj, ei, ej):
     q = deque()
-    visited = [[(-1, -1)] * N for _ in range(N)]
+    visited =[[0] * N for _ in range(N)]
 
     q.append((si, sj))
-    visited[si][sj] = (si, sj)
+    visited[si][sj] = ((si, sj))
 
     while q:
         ci, cj = q.popleft()
-
         if (ci, cj) == (ei, ej):
-            path = [(ci, cj)]
-            while True:
-                if (ci, cj) == (si, sj):
-                    return path[::-1]
-                ni, nj = visited[ci][cj]
-                path.append((ni, nj))
-                ci, cj = ni, nj
-        # 상하좌우
+            '''
+                내가 짠 코드는 시작위치를 포함한 route 였는데
+                이렇게 짜면 시작점 바로 다음 좌표의 경로이다
+            '''
+            route = []
+            ci, cj = visited[ci][cj]
+            while (ci, cj) != (si, sj):
+                route.append((ci, cj))
+                ci, cj = visited[ci][cj]
+            return route[::-1]
+
+        # 상하좌우 순
         for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
             ni, nj = ci + di, cj + dj
-            if is_range(ni, nj) and visited[ni][nj] == (-1, -1) and arr[ni][nj] == 0:
+            if 0 <= ni < N and 0 <= nj < N and visited[ni][nj] == 0 and arr[ni][nj] == 0:
                 q.append((ni, nj))
                 visited[ni][nj] = (ci, cj)
 
     return -1
 
-# [1] 메두사의 집 -> 공원 경로 찾기
-path = find_path(si, sj, ei, ej)
+def mark_line(v, ci, cj, dr):
+    while 0 <= ci < N and 0 <= cj < N:
+        v[ci][cj] = 2                       # 시각적 구분 위해 2로 표시
+        ci, cj = ci + di[dr], cj + dj[dr]   # 해당 방향으로 한 칸 이동
 
-if path != -1:
-    # path[0]은 초기위치라 다음 칸부터 시작
-    for i in range(1, len(path)):
-        dist, stone_cnt, attack_cnt = 0, 0, 0
-        ci, cj = path[i]
+def mark_safe(v, si, sj, dr, org_dr):
+    # [1] 직선방향 표시
+    ci,cj = si+di[dr], sj+dj[dr]
+    # v에 dr방향으로 이동가능지역 표시
+    mark_line(v, ci, cj, dr)
 
-        # 메두사가 공원에 도착했으면 0 출력 후 종료
-        if (ci, cj) == (ei, ej):
-            print(0)
+    # [2] 바라보는 방향으로 한줄씩 표시
+    ci,cj = si+di[org_dr],sj+dj[org_dr]
+    # 범위 내리면서 계속 진행
+    while 0<=ci<N and 0<=cj<N:
+        # v에 dr방향으로 이동가능지역 표시
+        mark_line(v, ci, cj, dr)
+        ci,cj = ci+di[org_dr],cj+dj[org_dr]
+
+def make_stone(marr, mi, mj, dr):
+    # 현재 칸에서 dr방향으로 쭉 이동하고
+    # 대각 방향으로 한칸 옮겨서 다시 dr방향으로 쭉 이동
+
+    v = [[0]*N for _ in range(N)]
+    cnt = 0
+    # [1] dr 방향으로 전사 만날때 까지 1 표시(메두사의 시야), 그 후 2 표시(가려짐)
+    ni, nj = mi + di[dr], mj + dj[dr]
+    while 0 <= ni < N and 0 <= nj < N:
+        v[ni][nj] = 1
+        if marr[ni][nj] > 0:
+            # 돌로 변한 기사의 수
+            cnt += marr[ni][nj]
+            # 동일 방향으로 이동
+            ni, nj = ni + di[dr], nj + di[dr]
+            # v에 dr방향으로 이동처리
+            mark_line(v, ni, nj, dr)
             break
+        ni, nj = ni + di[dr], nj + dj[dr]
 
-        # 메두사가 이동해서 전사 사라짐
-        for wi in range(N):
-            for wj in range(N):
-                if warriors[wi][wj] > 0 and (ci, cj) == (wi, wj):
-                    warriors[wi][wj] = 0
+    # [2] dr-1, dr+1 방향으로 동일 처리, 대각선 원점 잡고 dr방향으로 이동
+    for org_dr in ((dr - 1) * 8, (dr + 1) % 8):
+        # 첫 대각선 위치부터 체크
+        si, sj = mi + di[org_dr], mj + dj[org_dr]
+        # 대각선 방향으로 초기 위치 탐색후 직선 단위 처리
+        while 0 <= si < N and 0 <= sj < N:
+            # 전사 만나면 전사가 바라보는 방향 처리
+            if v[si][sj] == 0 and marr[si][sj] > 0:
+                v[si][sj] = 1
+                cnt += marr[si][sj]  # 돌로만든 전사수 누적
+                # v에 dr방향으로 이동가능지역 표시
+                # 직선으로 이동하는 방향, 대각 방향으로 둘다 표시
+                mark_safe(v, si, sj, dr, org_dr)
+                break
 
-        # [2] 메두사의 시선
-        stone_cnt, curr_d, blocked = look(ci, cj)
+            # 첫 위치가 전사가 아닌 경우는 직선으로 내려오며 탐색
+            ci, cj = si, sj
+            while 0 <= ci < N and 0 <= cj < N:  # 범위내라면 계속 진행
+                # 처음 방문
+                if v[ci][cj] == 0:
+                    v[ci][cj] = 1
+                    # 전사로 막혔으면
+                    if marr[ci][cj] > 0:
+                        cnt += marr[ci][cj]
+                        # v에 dr방향으로 이동가능지역 표시
+                        mark_safe(v, ci, cj, dr, org_dr)
+                        break
+                else:
+                    break
+                ci, cj = ci + di[dr], cj + dj[dr]
 
-        # 돌처리
-        for wi in range(N):
-            for wj in range(N):
-                if warriors[wi][wj] > 0 and blocked[wi][wj] == False:
-                    stone[wi][wj] = True
+            # 기준점 변경
+            si, sj = si + di[org_dr], sj + dj[org_dr]
 
-
-
-        # [3] 전사 이동 & 공격
-        # 첫번째, 두번째 이동방향
-        dirs = {
-            1: [(-1, 0), (1, 0), (0, -1), (0, 1)], # 상하좌우
-            2:  [(0, -1), (0, 1), (-1, 0), (1, 0)] # 좌우상하
-        }
-        '''
-            for문을 사용할때는 항상 조심해라
-        '''
-        for step in range(1, 3):
-            n_warriors = [x[:] for x in warriors]
-            for wi in range(N):
-                for wj in range(N):
-                    # 전사 아니거나, 해당 턴에 돌이면 pass
-                    if warriors[wi][wj] <= 0 or stone[wi][wj] == True:
-                        continue
-                    # 이동(최단거리, 상하좌우(1), 좌우하상(2))
-                    # 어차피 모두 갈 수 있기 때문에 먼저 갈 수 있는 곳이 최단거리
-                    for di, dj in dirs[step]:
-                        ni, nj = wi + di, wj + dj
-
-                        # 미방문, 거리 감소, 시야에 가린 or 시야 밖(즉, blocked 안된 곳)
-                        if is_range(ni, nj) and abs(ci - ni) + abs(cj - nj) < abs (ci - wi) + abs(cj - wj) and blocked[ni][nj] == True:
-                            n_warriors[ni][nj] += warriors[wi][wj]
-                            dist += warriors[wi][wj]
-                            # 이동한 곳이 메두사의 위치라면
-                            if (ni, nj) == (ci, cj):
-                                attack_cnt += warriors[wi][wj]
-                                n_warriors[ni][nj] = 0
-                            n_warriors[wi][wj] -= warriors[wi][wj]
-                            break
-
-            warriors = [x[:] for x in n_warriors]
+    return v, cnt
 
 
-        # 돌로 변한 전사 되돌림
-        for wi in range(N):
-            for wj in range(N):
-                if stone[wi][wj] == True:
-                    stone[wi][wj] = False
+def move_men(v, mi, mj):
 
-        print(dist, stone_cnt, attack_cnt)
+    # (1) 상하좌우, (2) 좌우상하
+    move, attack = 0, 0
 
+    for dirs in (((-1,0),(1,0),(0,-1),(0,1)), ((0,-1),(0,1),(-1,0),(1,0))):
+        for idx in range(len(men)-1, -1, -1):
+            ci, cj = men[idx]
+            if v[ci][cj] == 1:
+                continue
+
+            dist = abs(mi - ci) + abs(mj - cj)
+            for di, dj in dirs:
+                ni, nj = ci + di, cj + dj
+                # 범위내, 메두사 아니고, 현재보다 줄어드는 방향
+                if 0 <= ni < N and 0 <= nj < N and v[ni][nj] != 1 and dist > abs(mi-ni) + abs(mi-nj):
+                    if (ni, nj) == (mi, mj):
+                        attack += 1
+                        men.pop(idx)
+                    else:
+                        men[idx] = [ni, nj]
+                    move += 1
+                    break
+
+    return move, attack
+
+###################################################
+###################################################
+
+N, M = map(int, input().split())
+si, sj, ei, ej = map(int, input().split())
+t_lst = list(map(int, input().split()))
+
+men = []
+for i in range(0, 2*M, 2):
+    men.append([t_lst[i], t_lst[i+1]])
+arr = [list(map(int, input().split())) for _ in range(N)]
+
+
+route = find_route(si, sj, ei, ej)
+
+if route == -1:
+    print(-1)
 else:
-    # path가 없다면 -1 출력
-    print(path)
+    for mi, mj in route:
+        move_cnt, attack_cnt = 0, 0
+        # [1] 메두사 이동 : 지정된 최단 거리로 한칸 이동, 전사 사라짐 처리
+        ''' 
+            삭제시는 역순으로 제거하는게 편하다
+            왜냐하면 위에서부터 삭제하면 아래의 Element가 위로 올라와서 다음 순회할 Element의 index가 바뀌게 된다 
+        '''
+        # 메두사가 이동했을 때 삭제 처리
+        for i in range(len(men)-1, -1, -1):
+            if men[i] == [mi, mj]:
+                men.pop(i)
 
 
+        # [2] 메두사의 시선 : 상하좌우 네 방향 중 가장 많이 돌로 만들 수 있는 방향 찾기
+        # ==> v[]에 표시에서 이동시 참조(메두사의 시선 == 1, 전사에 가려진 곳 == 2, 빈땅 == 0)
+
+        # 상,우상, 우,우하, 하,좌하, 좌,좌상
+        # 0,  1,  2,  3,  4,  5,  6,  7
+        di = [-1, -1, 0, 1, 1, 1, 0, -1]
+        dj = [0, 1, 1, 1, 0, -1, -1, -1]
+
+        # marr[][] : 지도에 있는 전사 수
+        marr = [[0] * N for _ in range(N)]
+        for ti, tj in men:
+            marr[ti][tj] += 1
+
+        max_stone = -1
+        v = []
+        # 상하좌우
+        for dr in [0, 4, 6, 2]:
+            tv, tstone = make_stone(marr, mi, mj, dr)
+            if max_stone < tstone:
+                max_stone = tstone
+                v = tv
+
+        # [3] 전사들의 이동(한칸 씩 두번) : 메두사가 있는 경우 공격 후 사라짐
+        move_cnt, attack_cnt = move_men(v, mi, mj)
 
 
-
+        print(move_cnt, max_stone, attack_cnt)
+    print(0)
