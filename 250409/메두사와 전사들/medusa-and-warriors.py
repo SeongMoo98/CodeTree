@@ -242,7 +242,7 @@ if path != -1:
             for문을 사용할때는 항상 조심해라
         '''
         for step in range(1, 3):
-            n_warriors = [[0]*N for _ in range(N)]
+            n_warriors = [x[:] for x in warriors]
             for wi in range(N):
                 for wj in range(N):
                     # 전사 아니거나, 해당 턴에 돌이면 pass
@@ -261,6 +261,7 @@ if path != -1:
                             if (ni, nj) == (ci, cj):
                                 attack_cnt += warriors[wi][wj]
                                 n_warriors[ni][nj] = 0
+                            n_warriors[wi][wj] -= warriors[wi][wj]
                             break
 
             warriors = [x[:] for x in n_warriors]
