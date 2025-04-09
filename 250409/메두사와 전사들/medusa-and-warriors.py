@@ -49,21 +49,21 @@ M명의 전사 : 초기 (r_i, c_i) -> 메두사 최단경로, 도로, 비도로 
 '''
 from collections import deque
 
+
 N, M = map(int, input().split())
 # 메두사의 집, 공원
 si, sj, ei, ej = map(int, input().split())
 
-warriors = dict()
+# (i, j)에 있는 전사의 수
+warriors = [[0] * N for _ in range(N)]
 # 해당 턴에 돌인지
-stone = [False] * (M + 1)
-# 사라졌는지
-alive = [True] * (M + 1)
+stone = [[False] * N for _ in range(N)]
 
-temp = list(map(int, input().split()))
-warriors_num = 1
+
+temp = list(map(int ,input().split()))
 for i in range(0, len(temp), 2):
-    warriors[warriors_num] = (temp[i], temp[i+1])
-    warriors_num += 1
+    x, y = temp[i], temp[i+1]
+    warriors[x][y] += 1
 
 arr = [list(map(int, input().split())) for _ in range(N)]
 
@@ -134,32 +134,37 @@ def look(si, sj):
                     blocked[ni][nj] = False
 
         cnt = 0
-        for num, (wsi, wsj) in warriors.items():
-            # 시야각에 들어온 전사
-            if alive[num] == True and blocked[wsi][wsj] == False:
-                # 현재 (ci, cj)인 warrior는 모두 돌로 변함
-                # cnt += list(warriors.values()).count((wsi, wsj))
-                cnt += 1
+        '''
+        앞에 있는 게 먼저 되는게 아니라 뒤에 있는게 먼저 시작해버리네;;        
+        '''
+        for wsi in range(N):
+            for wsj in range(N):
+                if warriors[wsi][wsj] > 0 and blocked[wsi][wsj] == False:
 
-                nq = deque()
-                n_visited = [[False] * N for _ in range(N)]
+                    nq = deque()
+                    n_visited = [[False] * N for _ in range(N)]
 
-                nq.append((wsi, wsj))
-                n_visited[wsi][wsj] = True
-                while nq:
-                    wci, wcj = nq.popleft()
-                    # 현재 메두사의 위치, 현재 전사의 위치, 현재 메두사 시야 방향으로 방향 결정
-                    wd = find_block_direction(si, sj, wsi, wsj, curr_d)
+                    nq.append((wsi, wsj))
+                    n_visited[wsi][wsj] = True
+                    while nq:
+                        wci, wcj = nq.popleft()
+                        # 현재 메두사의 위치, 현재 전사의 위치, 현재 메두사 시야 방향으로 방향 결정
+                        wd = find_block_direction(si, sj, wsi, wsj, curr_d)
 
-                    for wdi, wdj in wd :
-                        wni, wnj = wci + wdi, wcj + wdj
-                        # 범위내, 미방문 -> blocked 처리
-                        if is_range(wni, wnj) and n_visited[wni][wnj] == False:
-                            nq.append((wni, wnj))
-                            n_visited[wni][wnj] = True
-                            blocked[wni][wnj] = True
+                        for wdi, wdj in wd:
+                            wni, wnj = wci + wdi, wcj + wdj
+                            # 범위내, 미방문 -> blocked 처리
+                            if is_range(wni, wnj) and n_visited[wni][wnj] == False:
+                                nq.append((wni, wnj))
+                                n_visited[wni][wnj] = True
+                                blocked[wni][wnj] = True
+
+        for wi in range(N):
+            for wj in range(N):
+                # 전사 있고, block 되지 못한곳
+                if warriors[wi][wj] > 0 and blocked[wi][wj] == False:
+                    cnt += warriors[wi][wj]
         temp_lst.append((cnt, curr_d, blocked))
-
     # 돌로 만든 전사의 수 많은, 상 하 좌 우 순
     temp_lst.sort(key=lambda x: (-x[0], x[1]))
 
@@ -210,57 +215,63 @@ if path != -1:
             print(0)
             break
 
-
-
-        # 전사 사라짐
-        for num, (wci, wcj) in warriors.items():
-            if (ci, cj) == (wci, wcj):
-                alive[num] = False
+        # 메두사가 이동해서 전사 사라짐
+        for wi in range(N):
+            for wj in range(N):
+                if warriors[wi][wj] > 0 and (ci, cj) == (wi, wj):
+                    warriors[wi][wj] = 0
 
         # [2] 메두사의 시선
         stone_cnt, curr_d, blocked = look(ci, cj)
 
         # 돌처리
-        for i in range(N):
-            for j in range(N):
-                for num, (wi, wj) in warriors.items():
-                    if blocked[i][j] == False and (i, j) == (wi, wj):
-                        stone[num] = True
+        for wi in range(N):
+            for wj in range(N):
+                if warriors[wi][wj] > 0 and blocked[wi][wj] == False:
+                    stone[wi][wj] = True
 
 
 
         # [3] 전사 이동 & 공격
         # 첫번째, 두번째 이동방향
         dirs = {
-            1: [(-1, 0), (1, 0), (0, -1), (0, 1)],
-            2:  [(0, -1), (0, 1), (1, 0), (-1, 0)]
+            1: [(-1, 0), (1, 0), (0, -1), (0, 1)], # 상하좌우
+            2:  [(0, -1), (0, 1), (-1, 0), (1, 0)] # 좌우상하
         }
-
+        '''
+            for문을 사용할때는 항상 조심해라
+        '''
+        n_warriors = [x[:] for x in warriors]
         for step in range(1, 3):
-            for num, (wi, wj) in warriors.items():
-                # 해당 턴에 돌이거나, 이미 죽었으면 pass
-                if stone[num] == True or alive[num] == False:
-                    continue
-                # 이동(최단거리, 상하좌우(1), 좌우하상(2))
-                # 어차피 모두 갈 수 있기 때문에 먼저 갈 수 있는 곳이 최단거리
-                for di, dj in dirs[step]:
-                    ni, nj = wi + di, wj + dj
+            for wi in range(N):
+                for wj in range(N):
+                    # 전사 아니거나, 해당 턴에 돌이면 pass
+                    if warriors[wi][wj] <= 0 or stone[wi][wj] == True:
+                        continue
+                    # 이동(최단거리, 상하좌우(1), 좌우하상(2))
+                    # 어차피 모두 갈 수 있기 때문에 먼저 갈 수 있는 곳이 최단거리
+                    for di, dj in dirs[step]:
+                        ni, nj = wi + di, wj + dj
 
-                    # 미방문, 거리 감소, 시야에 가린 or 시야 밖(즉, blocked 안된 곳)
-                    if is_range(ni, nj) and abs(ci - ni) + abs(cj - nj) < abs (ci - wi) + abs(cj - wj) and blocked[ni][nj] == True:
-                        warriors[num] = (ni, nj)
-                        dist += 1
-                        # 이동한 곳이 메두사의 위치라면
-                        if (ni, nj) == (ci, cj):
-                            attack_cnt += 1
-                            alive[num] = False
-                        break
+                        # 미방문, 거리 감소, 시야에 가린 or 시야 밖(즉, blocked 안된 곳)
+                        if is_range(ni, nj) and abs(ci - ni) + abs(cj - nj) < abs (ci - wi) + abs(cj - wj) and blocked[ni][nj] == True:
+                            n_warriors[ni][nj] += warriors[wi][wj]
+                            dist += warriors[wi][wj]
+                            # 이동한 곳이 메두사의 위치라면
+                            if (ni, nj) == (ci, cj):
+                                attack_cnt += warriors[wi][wj]
+                                n_warriors[ni][nj] = 0
+                            n_warriors[wi][wj] = 0
+                            break
+
+            warriors = [x[:] for x in n_warriors]
 
 
         # 돌로 변한 전사 되돌림
-        for num, _ in warriors.items():
-            if alive[num] == True:
-                stone[num] = False
+        for wi in range(N):
+            for wj in range(N):
+                if stone[wi][wj] == True:
+                    stone[wi][wj] = False
 
         print(dist, stone_cnt, attack_cnt)
 
