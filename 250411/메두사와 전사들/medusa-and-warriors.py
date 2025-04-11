@@ -48,7 +48,6 @@ M명의 전사 : 초기 (r_i, c_i) -> 메두사 최단경로, 도로, 비도로 
 '''
 from collections import deque
 
-from dask.array import store
 
 N, M = map(int, input().split())
 # 메두사의 집, 공원
@@ -73,7 +72,7 @@ def find_block_direction(si, sj, wi, wj, curr_d):
     # 현재 메두사의 위치와 전사의 위치에 따라, 현재 돌이 된 전사의 위치에서 뻗어나간 가린 공간에 대한 direction들
     if curr_d == 0:     # 상
         # 전사1   전사 2    전사3
-        # 
+        #
         #        메두사
         # 메두사가 상으로 봤을때 전사 1,2,3에서 뻗어나가는 방향
         if cj > wj: wd = [(-1, -1), (-1, 0)]  # 좌상, 상
@@ -168,7 +167,7 @@ def look(si, sj):
                                 visited[wni][wnj] = True
                                 # 시야 가려짐 처리
                                 blocked[wni][wnj] = True
-        
+
         # 현재 메두사의 방향에 따른 돌로 된 전사 수 세기
         cnt = 0
         for wi in range(N):
@@ -220,11 +219,11 @@ else:
     # path[0]은 초기위치라 다음 칸부터 시작, 마지막 이동을 하면 0출력
     for ci, cj in path[:-1]:
         dist, stone_cnt, attack_cnt = 0, 0, 0
-        
+
         # 메두사가 이동해서 전사 사라짐
         if warriors[ci][cj] > 0:
             warriors[ci][cj] = 0
-        
+
         # [2] 메두사의 시선
         stone_cnt, curr_d, blocked = look(ci, cj)
 
@@ -250,11 +249,11 @@ else:
                 for wj in range(N):
                     if stone[wi][wj] == True:
                         continue
-                        
+
                     if warriors[wi][wj] > 0:
                         for di, dj in dirs[step]:
                             ni, nj = wi + di, wj + dj
-    
+
                             # 미방문, 거리 감소, 시야에 가린 or 시야 밖(즉, blocked 안된 곳)
                             if is_range(ni, nj) and abs(ci - ni) + abs(cj - nj) < abs (ci - wi) + abs(cj - wj) and blocked[ni][nj] == True:
                                 # (wi, wj) -> (ni, nj) 이동
@@ -267,7 +266,7 @@ else:
                                 # 복제한 arr에서 이동한 전사들 처리
                                 n_warriors[wi][wj] -= warriors[wi][wj]
                                 break
-    
+
                 warriors = [x[:] for x in n_warriors]
 
         # 돌로 변한 전사 되돌림
