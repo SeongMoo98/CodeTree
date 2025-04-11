@@ -247,23 +247,25 @@ else:
             n_warriors = [x[:] for x in warriors]
             for wi in range(N):
                 for wj in range(N):
-                    if warriors[wi][wj] <= 0 or stone[wi][wj] == True:
+                    if stone[wi][wj] == True:
                         continue
-                    for di, dj in dirs[step]:
-                        ni, nj = wi + di, wj + dj
 
-                        # 미방문, 거리 감소, 시야에 가린 or 시야 밖(즉, blocked 안된 곳)
-                        if is_range(ni, nj) and abs(ci - ni) + abs(cj - nj) < abs (ci - wi) + abs(cj - wj) and blocked[ni][nj] == True:
-                            # (wi, wj) -> (ni, nj) 이동
-                            n_warriors[ni][nj] += warriors[wi][wj]
-                            dist += warriors[wi][wj]
-                            # 이동한 곳이 메두사의 위치라면 사라짐
-                            if (ni, nj) == (ci, cj):
-                                attack_cnt += warriors[wi][wj]
-                                n_warriors[ni][nj] = 0
-                            # 복제한 arr에서 이동한 전사들 처리
-                            n_warriors[wi][wj] -= warriors[wi][wj]
-                            break
+                    if warriors[wi][wj] > 0:
+                        for di, dj in dirs[step]:
+                            ni, nj = wi + di, wj + dj
+
+                            # 미방문, 거리 감소, 시야에 가린 or 시야 밖(즉, blocked 안된 곳)
+                            if is_range(ni, nj) and abs(ci - ni) + abs(cj - nj) < abs (ci - wi) + abs(cj - wj) and blocked[ni][nj] == True:
+                                # (wi, wj) -> (ni, nj) 이동
+                                n_warriors[ni][nj] += warriors[wi][wj]
+                                dist += warriors[wi][wj]
+                                # 이동한 곳이 메두사의 위치라면 사라짐
+                                if (ni, nj) == (ci, cj):
+                                    attack_cnt += warriors[wi][wj]
+                                    n_warriors[ni][nj] = 0
+                                # 복제한 arr에서 이동한 전사들 처리
+                                n_warriors[wi][wj] -= warriors[wi][wj]
+                                break
 
             warriors = [x[:] for x in n_warriors]
 
